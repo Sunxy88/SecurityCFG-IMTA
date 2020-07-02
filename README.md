@@ -1,8 +1,8 @@
 # Read me
 1. Examples of different statements and corresponding control flow graphs 
-are in the folder `src/test/resources/control-flow`
+are in the [folder here](src/test/resources/control-flow)
 2. Example of the filter to search particular methods by given name is in
- the `src/test/java/xisong/QueryParticularFunction.java`
+ [here](src/test/java/xisong/QueryParticularFunction.java)
 
 # TODO
 1. The offered maven dependency of [spoon](https://github.com/INRIA/spoon/tree/master/spoon-control-flow) does not work.
