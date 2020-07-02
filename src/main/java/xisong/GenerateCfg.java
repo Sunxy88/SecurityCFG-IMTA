@@ -32,7 +32,7 @@ public class GenerateCfg {
     * TODO: It's necessary to update spoon because current version of spoon supports only JDK1.7.
     * */
     public GenerateCfg(String folder) throws Exception {
-        this(folder, 7);
+        this(folder, 11);
     }
 
 
@@ -53,7 +53,7 @@ public class GenerateCfg {
     }
 
     public ControlFlowGraph getCFG(boolean simplify) {
-        pm.process();
+        pm.process(factory.getModel().getAllPackages());
         ControlFlowGraph graph = builder.getResult();
         if (simplify) graph.simplifyConvergenceNodes();
         return graph;

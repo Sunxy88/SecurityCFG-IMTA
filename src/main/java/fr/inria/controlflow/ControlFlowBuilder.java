@@ -1,8 +1,65 @@
+/**
+ * The MIT License
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
 package fr.inria.controlflow;
 
 import spoon.reflect.code.*;
-import spoon.reflect.declaration.*;
-import spoon.reflect.reference.*;
+//import spoon.reflect.code.CtYieldStatement;
+import spoon.reflect.declaration.CtAnnotation;
+import spoon.reflect.declaration.CtAnnotationMethod;
+import spoon.reflect.declaration.CtAnnotationType;
+import spoon.reflect.declaration.CtAnonymousExecutable;
+import spoon.reflect.declaration.CtClass;
+import spoon.reflect.declaration.CtCompilationUnit;
+import spoon.reflect.declaration.CtConstructor;
+import spoon.reflect.declaration.CtElement;
+import spoon.reflect.declaration.CtEnum;
+import spoon.reflect.declaration.CtEnumValue;
+import spoon.reflect.declaration.CtField;
+import spoon.reflect.declaration.CtImport;
+import spoon.reflect.declaration.CtInterface;
+import spoon.reflect.declaration.CtMethod;
+import spoon.reflect.declaration.CtModule;
+import spoon.reflect.declaration.CtModuleRequirement;
+import spoon.reflect.declaration.CtPackage;
+import spoon.reflect.declaration.CtPackageDeclaration;
+import spoon.reflect.declaration.CtPackageExport;
+import spoon.reflect.declaration.CtParameter;
+import spoon.reflect.declaration.CtProvidedService;
+import spoon.reflect.declaration.CtTypeParameter;
+import spoon.reflect.declaration.CtUsedService;
+import spoon.reflect.reference.CtArrayTypeReference;
+import spoon.reflect.reference.CtCatchVariableReference;
+import spoon.reflect.reference.CtExecutableReference;
+import spoon.reflect.reference.CtFieldReference;
+import spoon.reflect.reference.CtIntersectionTypeReference;
+import spoon.reflect.reference.CtLocalVariableReference;
+import spoon.reflect.reference.CtModuleReference;
+import spoon.reflect.reference.CtPackageReference;
+import spoon.reflect.reference.CtParameterReference;
+import spoon.reflect.reference.CtTypeMemberWildcardImportReference;
+import spoon.reflect.reference.CtTypeParameterReference;
+import spoon.reflect.reference.CtTypeReference;
+import spoon.reflect.reference.CtUnboundVariableReference;
+import spoon.reflect.reference.CtWildcardReference;
 import spoon.reflect.visitor.CtVisitor;
 
 import java.lang.annotation.Annotation;
@@ -10,20 +67,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Stack;
 
-import static fr.inria.controlflow.BranchKind.*;
-
 /**
  * Builds the control graph for a given snippet of code
- * <p/>
+ *
  * Created by marodrig on 13/10/2015.
  */
 public class ControlFlowBuilder implements CtVisitor {
 
     ControlFlowGraph result = new ControlFlowGraph(ControlFlowEdge.class);
 
-    ControlFlowNode exitNode = new ControlFlowNode(null, result, EXIT);
+    ControlFlowNode exitNode = new ControlFlowNode(null, result, BranchKind.EXIT);
 
-    ControlFlowNode beginNode = new ControlFlowNode(null, result, BEGIN);
+    ControlFlowNode beginNode = new ControlFlowNode(null, result, BranchKind.BEGIN);
 
     ControlFlowNode lastNode = beginNode;
 
@@ -41,8 +96,8 @@ public class ControlFlowBuilder implements CtVisitor {
     /**
      * Build the control graph
      *
-     * @param s
-     * @return
+     * @param s starting point
+     * @return control flow graph
      */
     public ControlFlowGraph build(CtElement s) {
         s.accept(this);
@@ -51,24 +106,24 @@ public class ControlFlowBuilder implements CtVisitor {
     }
 
     private void visitConditional(CtElement parent, CtConditional conditional) {
-        ControlFlowNode branch = new ControlFlowNode(parent, result, BRANCH);
+        ControlFlowNode branch = new ControlFlowNode(parent, result, BranchKind.BRANCH);
         tryAddEdge(lastNode, branch);
 
-        ControlFlowNode convergenceNode = new ControlFlowNode(null, result, CONVERGE);
+        ControlFlowNode convergenceNode = new ControlFlowNode(null, result, BranchKind.CONVERGE);
         lastNode = branch;
-        if (conditional.getThenExpression() instanceof CtConditional)
+        if (conditional.getThenExpression() instanceof CtConditional) {
             visitConditional(conditional, (CtConditional) conditional.getThenExpression());
-        else {
-            lastNode = new ControlFlowNode(conditional.getThenExpression(), result, STATEMENT);
+        } else {
+            lastNode = new ControlFlowNode(conditional.getThenExpression(), result, BranchKind.STATEMENT);
             tryAddEdge(branch, lastNode);
         }
         tryAddEdge(lastNode, convergenceNode);
 
         lastNode = branch;
-        if (conditional.getElseExpression() instanceof CtConditional)
+        if (conditional.getElseExpression() instanceof CtConditional) {
             visitConditional(conditional, (CtConditional) conditional.getElseExpression());
-        else {
-            lastNode = new ControlFlowNode(conditional.getElseExpression(), result, STATEMENT);
+        } else {
+            lastNode = new ControlFlowNode(conditional.getElseExpression(), result, BranchKind.STATEMENT);
             tryAddEdge(branch, lastNode);
         }
         tryAddEdge(lastNode, convergenceNode);
@@ -77,44 +132,54 @@ public class ControlFlowBuilder implements CtVisitor {
 
     /**
      * Returns the first graph node representing the statement s construction.
-     * <p/>
+     *
      * Usually an statement is represented by many blocks and branches.
      * This method returns the first of those blocks/branches.
      *
      * @param g         Graph in which the bloc is to be found
      * @param statement Statement for which the first block is needed
-     * @return
+     * @return first graph node
+     * @throws NotFoundException when the initial node cannot be found
      */
     public static ControlFlowNode firstNode(ControlFlowGraph g, CtElement statement) throws NotFoundException {
 
-        if (statement == null) throw new NotFoundException("statement null");
+        if (statement == null) {
+            throw new NotFoundException("statement null");
+        }
 
         if (statement instanceof CtFor) {
             CtFor ctFor = (CtFor) statement;
-            if ( ctFor.getForInit().size() > 0 ) return g.findNode(ctFor.getForInit().get(0));
-            else return g.findNode(ctFor.getExpression());
-        }
-        else if (statement instanceof CtForEach)
+            if (ctFor.getForInit().size() > 0) {
+                return g.findNode(ctFor.getForInit().get(0));
+            } else {
+                return g.findNode(ctFor.getExpression());
+            }
+        } else if (statement instanceof CtForEach) {
             return g.findNode(((CtForEach) statement).getVariable());
-        else if (statement instanceof CtWhile)
+        } else if (statement instanceof CtWhile) {
             return g.findNode(((CtWhile) statement).getLoopingExpression());
-        else if (statement instanceof CtDo) {
+        } else if (statement instanceof CtDo) {
             ControlFlowNode n = g.findNode(((CtDo) statement).getLoopingExpression());
             ControlFlowNode n1 = null;
-            for (ControlFlowEdge e : g.outgoingEdgesOf(n))
+            for (ControlFlowEdge e : g.outgoingEdgesOf(n)) {
                 if (e.isBackEdge()) {
                     n1 = e.getTargetNode();
                     break;
                 }
-            if (n == n1 || n1 == null)
+            }
+            if (n == n1 || n1 == null) {
                 throw new NotFoundException("cannot find initial node of do while loop");
+            }
             return n1;
-        } else if (statement instanceof CtIf)
+        } else if (statement instanceof CtIf) {
             return g.findNode(((CtIf) statement).getCondition());
-        else if (statement instanceof CtSwitch)
+        } else if (statement instanceof CtSwitch) {
             return g.findNode(((CtSwitch) statement).getSelector());
-        else if (statement instanceof CtBlock) return g.findNode(((CtBlock)statement).getStatement(0));
-        else return g.findNode(statement);
+        } else if (statement instanceof CtBlock) {
+            return g.findNode(((CtBlock) statement).getStatement(0));
+        } else {
+            return g.findNode(statement);
+        }
     }
 
 
@@ -127,10 +192,11 @@ public class ControlFlowBuilder implements CtVisitor {
     /**
      * Register the label of the statement
      *
-     * @param st
      */
     private void registerStatementLabel(CtStatement st) {
-        if (st.getLabel() == null || st.getLabel().isEmpty()) return;
+        if (st.getLabel() == null || st.getLabel().isEmpty()) {
+            return;
+        }
         if (!labeledStatement.containsKey(st.getLabel())) {
             labeledStatement.put(st.getLabel(), st);
         }
@@ -159,9 +225,9 @@ public class ControlFlowBuilder implements CtVisitor {
         boolean isBreak = source != null && source.getStatement() instanceof CtBreak;
         boolean isContinue = source != null && source.getStatement() instanceof CtContinue;
 
-        if (source != null && target != null &&
-                !result.containsEdge(source, target) &&
-                (isLooping || breakDance || !(isBreak || isContinue))) {
+        if (source != null && target != null
+                && !result.containsEdge(source, target)
+                && (isLooping || breakDance || !(isBreak || isContinue))) {
             ControlFlowEdge e = result.addEdge(source, target);
             e.setBackEdge(isLooping);
         }
@@ -195,7 +261,12 @@ public class ControlFlowBuilder implements CtVisitor {
     }
 
     @Override
-    public <T, E extends CtExpression<?>> void visitCtArrayAccess(CtArrayAccess<T, E> arrayAccess) {
+    public <T> void visitCtArrayRead(CtArrayRead<T> arrayRead) {
+
+    }
+
+    @Override
+    public <T> void visitCtArrayWrite(CtArrayWrite<T> arrayWrite) {
 
     }
 
@@ -206,7 +277,7 @@ public class ControlFlowBuilder implements CtVisitor {
 
     @Override
     public <T> void visitCtAssert(CtAssert<T> asserted) {
-        defaultAction(STATEMENT, asserted);
+        defaultAction(BranchKind.STATEMENT, asserted);
     }
 
     @Override
@@ -216,7 +287,9 @@ public class ControlFlowBuilder implements CtVisitor {
 
         if (assignement.getAssignment() instanceof CtConditional) {
             visitConditional(assignement, (CtConditional) assignement.getAssignment());
-        } else defaultAction(STATEMENT, assignement);
+        } else {
+            defaultAction(BranchKind.STATEMENT, assignement);
+        }
     }
 
     @Override
@@ -225,7 +298,7 @@ public class ControlFlowBuilder implements CtVisitor {
     }
 
     private <R> void travelStatementList(List<CtStatement> statements) {
-        ControlFlowNode begin = new ControlFlowNode(null, result, BLOCK_BEGIN);
+        ControlFlowNode begin = new ControlFlowNode(null, result, BranchKind.BLOCK_BEGIN);
         tryAddEdge(lastNode, begin);
         lastNode = begin;
         for (CtStatement s : statements) {
@@ -233,7 +306,7 @@ public class ControlFlowBuilder implements CtVisitor {
             s.accept(this); // <- This should modify last node
             //tryAddEdge(before, lastNode); //Probably the link is already added
         }
-        ControlFlowNode end = new ControlFlowNode(null, result, BLOCK_END);
+        ControlFlowNode end = new ControlFlowNode(null, result, BranchKind.BLOCK_END);
         tryAddEdge(lastNode, end);
         lastNode = end;
     }
@@ -252,11 +325,11 @@ public class ControlFlowBuilder implements CtVisitor {
             to = null;
         }
         if (to != null) {
-            defaultAction(STATEMENT, breakStatement);
+            defaultAction(BranchKind.STATEMENT, breakStatement);
             tryAddEdge(lastNode, to, true, false);
         } else if (!breakingBad.empty()) {
             //Jump to the last guy who said I can jump to...
-            defaultAction(STATEMENT, breakStatement);
+            defaultAction(BranchKind.STATEMENT, breakStatement);
             tryAddEdge(lastNode, breakingBad.peek(), false, true);
         }
     }
@@ -268,7 +341,7 @@ public class ControlFlowBuilder implements CtVisitor {
 
     @Override
     public <T> void visitCtClass(CtClass<T> ctClass) {
-        defaultAction(STATEMENT, ctClass);
+        defaultAction(BranchKind.STATEMENT, ctClass);
     }
 
     @Override
@@ -290,7 +363,7 @@ public class ControlFlowBuilder implements CtVisitor {
             to = continueBad.peek();
         }
         if (to != null) {
-            defaultAction(STATEMENT, continueStatement);
+            defaultAction(BranchKind.STATEMENT, continueStatement);
             tryAddEdge(lastNode, to, true, false);
         }
     }
@@ -299,15 +372,15 @@ public class ControlFlowBuilder implements CtVisitor {
     public void visitCtDo(CtDo doLoop) {
         registerStatementLabel(doLoop);
 
-        ControlFlowNode convergenceNode = new ControlFlowNode(null, result, CONVERGE);
+        ControlFlowNode convergenceNode = new ControlFlowNode(null, result, BranchKind.CONVERGE);
         continueBad.push(convergenceNode);
         //to break out of the do loop
-        ControlFlowNode convergenceNodeOut = new ControlFlowNode(null, result, CONVERGE);
+        ControlFlowNode convergenceNodeOut = new ControlFlowNode(null, result, BranchKind.CONVERGE);
         breakingBad.push(convergenceNodeOut);
 
 
         tryAddEdge(lastNode, convergenceNode);
-        ControlFlowNode branch = new ControlFlowNode(doLoop.getLoopingExpression(), result, BRANCH);
+        ControlFlowNode branch = new ControlFlowNode(doLoop.getLoopingExpression(), result, BranchKind.BRANCH);
         tryAddEdge(branch, convergenceNode, true, false);
         tryAddEdge(branch, convergenceNodeOut);
 
@@ -338,7 +411,7 @@ public class ControlFlowBuilder implements CtVisitor {
     }
 
     @Override
-    public <T> void visitCtTargetedAccess(CtTargetedAccess<T> targetedAccess) {
+    public <T> void visitCtEnumValue(CtEnumValue<T> enumValue) {
 
     }
 
@@ -353,21 +426,28 @@ public class ControlFlowBuilder implements CtVisitor {
     }
 
     @Override
+    public <T> void visitCtUnboundVariableReference(CtUnboundVariableReference<T> reference) {
+
+    }
+
+    @Override
     public void visitCtFor(CtFor forLoop) {
         registerStatementLabel(forLoop);
 
         //Add the initialization code
         if (forLoop.getForInit() != null) {
-            if (forLoop.getForInit().size() > 1)
+            if (forLoop.getForInit().size() > 1) {
                 travelStatementList(forLoop.getForInit());
-            else if (forLoop.getForInit().size() > 0) forLoop.getForInit().get(0).accept(this);
+            } else if (forLoop.getForInit().size() > 0) {
+                forLoop.getForInit().get(0).accept(this);
+            }
         }
 
-        ControlFlowNode convergence = new ControlFlowNode(forLoop.getExpression(), result, CONVERGE);
+        ControlFlowNode convergence = new ControlFlowNode(forLoop.getExpression(), result, BranchKind.CONVERGE);
         breakingBad.push(convergence);
 
         //Next the branch
-        ControlFlowNode branch = new ControlFlowNode(forLoop.getExpression(), result, BRANCH);
+        ControlFlowNode branch = new ControlFlowNode(forLoop.getExpression(), result, BranchKind.BRANCH);
         tryAddEdge(lastNode, branch);
 
         //Node continue statements can continue to
@@ -375,13 +455,17 @@ public class ControlFlowBuilder implements CtVisitor {
 
         //Body
         lastNode = branch;
-        if (forLoop.getBody() != null) forLoop.getBody().accept(this);
+        if (forLoop.getBody() != null) {
+            forLoop.getBody().accept(this);
+        }
 
         //Append the update at the end
         if (forLoop.getForUpdate() != null) {
-            if (forLoop.getForUpdate().size() > 1)
+            if (forLoop.getForUpdate().size() > 1) {
                 travelStatementList(forLoop.getForUpdate());
-            else if (forLoop.getForUpdate().size() > 0) forLoop.getForUpdate().get(0).accept(this);
+            } else if (forLoop.getForUpdate().size() > 0) {
+                forLoop.getForUpdate().get(0).accept(this);
+            }
         }
 
         //Link to the branch
@@ -400,14 +484,14 @@ public class ControlFlowBuilder implements CtVisitor {
     public void visitCtForEach(CtForEach foreach) {
         registerStatementLabel(foreach);
 
-        ControlFlowNode convergence = new ControlFlowNode(null, result, CONVERGE);
+        ControlFlowNode convergence = new ControlFlowNode(null, result, BranchKind.CONVERGE);
         breakingBad.push(convergence);
 
-        ControlFlowNode init = new ControlFlowNode(foreach.getVariable(), result, STATEMENT);
+        ControlFlowNode init = new ControlFlowNode(foreach.getVariable(), result, BranchKind.STATEMENT);
         tryAddEdge(lastNode, init);
         lastNode = init;
 
-        ControlFlowNode branch = new ControlFlowNode(foreach.getExpression(), result, BRANCH);
+        ControlFlowNode branch = new ControlFlowNode(foreach.getExpression(), result, BranchKind.BRANCH);
         continueBad.push(branch);
         tryAddEdge(lastNode, branch);
 
@@ -429,10 +513,10 @@ public class ControlFlowBuilder implements CtVisitor {
     public void visitCtIf(CtIf ifElement) {
         registerStatementLabel(ifElement);
 
-        ControlFlowNode branch = new ControlFlowNode(ifElement.getCondition(), result, BRANCH);
+        ControlFlowNode branch = new ControlFlowNode(ifElement.getCondition(), result, BranchKind.BRANCH);
         tryAddEdge(lastNode, branch);
 
-        ControlFlowNode convergenceNode = new ControlFlowNode(null, result, CONVERGE);
+        ControlFlowNode convergenceNode = new ControlFlowNode(null, result, BranchKind.CONVERGE);
         if (ifElement.getThenStatement() != null) {
             lastNode = branch;
             ifElement.getThenStatement().accept(this);
@@ -457,7 +541,7 @@ public class ControlFlowBuilder implements CtVisitor {
     @Override
     public <T> void visitCtInvocation(CtInvocation<T> invocation) {
         registerStatementLabel(invocation);
-        defaultAction(STATEMENT, invocation);
+        defaultAction(BranchKind.STATEMENT, invocation);
     }
 
     @Override
@@ -470,7 +554,9 @@ public class ControlFlowBuilder implements CtVisitor {
         registerStatementLabel(localVariable);
         if (localVariable.getDefaultExpression() instanceof CtConditional) {
             visitConditional(localVariable, (CtConditional) localVariable.getDefaultExpression());
-        } else defaultAction(STATEMENT, localVariable);
+        } else {
+            defaultAction(BranchKind.STATEMENT, localVariable);
+        }
     }
 
     @Override
@@ -494,7 +580,17 @@ public class ControlFlowBuilder implements CtVisitor {
     }
 
     @Override
+    public <T> void visitCtAnnotationMethod(CtAnnotationMethod<T> annotationMethod) {
+
+    }
+
+    @Override
     public <T> void visitCtNewArray(CtNewArray<T> newArray) {
+
+    }
+
+    @Override
+    public <T> void visitCtConstructorCall(CtConstructorCall<T> ctConstructorCall) {
 
     }
 
@@ -504,9 +600,19 @@ public class ControlFlowBuilder implements CtVisitor {
     }
 
     @Override
-    public <T, A extends T> void visitCtOperatorAssignement(CtOperatorAssignment<T, A> assignment) {
+    public <T> void visitCtLambda(CtLambda<T> lambda) {
+
+    }
+
+    @Override
+    public <T, E extends CtExpression<?>> void visitCtExecutableReferenceExpression(CtExecutableReferenceExpression<T, E> expression) {
+
+    }
+
+    @Override
+    public <T, A extends T> void visitCtOperatorAssignment(CtOperatorAssignment<T, A> assignment) {
         registerStatementLabel(assignment);
-        defaultAction(STATEMENT, assignment);
+        defaultAction(BranchKind.STATEMENT, assignment);
     }
 
     @Override
@@ -532,7 +638,7 @@ public class ControlFlowBuilder implements CtVisitor {
     @Override
     public <R> void visitCtReturn(CtReturn<R> returnStatement) {
         registerStatementLabel(returnStatement);
-        ControlFlowNode n = new ControlFlowNode(returnStatement, result, STATEMENT);
+        ControlFlowNode n = new ControlFlowNode(returnStatement, result, BranchKind.STATEMENT);
         tryAddEdge(lastNode, n);
         tryAddEdge(n, exitNode);
         lastNode = null; //Special case in which this node does not connect with the next, because is a return
@@ -546,7 +652,7 @@ public class ControlFlowBuilder implements CtVisitor {
     @Override
     public <S> void visitCtCase(CtCase<S> caseStatement) {
         registerStatementLabel(caseStatement);
-        ControlFlowNode caseNode = new ControlFlowNode(caseStatement.getCaseExpression(), result, STATEMENT);
+        ControlFlowNode caseNode = new ControlFlowNode(caseStatement.getCaseExpression(), result, BranchKind.STATEMENT);
         tryAddEdge(lastNode, caseNode);
         lastNode = caseNode;
         travelStatementList(caseStatement.getStatements());
@@ -556,11 +662,11 @@ public class ControlFlowBuilder implements CtVisitor {
     public <S> void visitCtSwitch(CtSwitch<S> switchStatement) {
         registerStatementLabel(switchStatement);
         //Push the condition
-        ControlFlowNode switchNode = new ControlFlowNode(switchStatement.getSelector(), result, BRANCH);
+        ControlFlowNode switchNode = new ControlFlowNode(switchStatement.getSelector(), result, BranchKind.BRANCH);
         tryAddEdge(lastNode, switchNode);
 
         //Create a convergence node for all the branches to converge after this
-        ControlFlowNode convergenceNode = new ControlFlowNode(null, result, CONVERGE);
+        ControlFlowNode convergenceNode = new ControlFlowNode(null, result, BranchKind.CONVERGE);
         //Push the convergence node so all non labeled breaks jumps there
         breakingBad.push(convergenceNode);
 
@@ -570,17 +676,26 @@ public class ControlFlowBuilder implements CtVisitor {
 
             //Visit Case
             registerStatementLabel(caseStatement);
-            ControlFlowNode cn = new ControlFlowNode(caseStatement.getCaseExpression(), result, STATEMENT);
+            ControlFlowNode cn = new ControlFlowNode(caseStatement.getCaseExpression(), result, BranchKind.STATEMENT);
             tryAddEdge(lastNode, cn);
-            if (lastNode != switchNode) tryAddEdge(switchNode, cn);
+            if (lastNode != switchNode) {
+                tryAddEdge(switchNode, cn);
+            }
             lastNode = cn;
             travelStatementList(caseStatement.getStatements());
-            if (lastNode.getStatement() instanceof CtBreak) lastNode = switchNode;
+            if (lastNode.getStatement() instanceof CtBreak) {
+                lastNode = switchNode;
+            }
         }
 
         //Return as last node the convergence node
         lastNode = convergenceNode;
         breakingBad.pop();
+    }
+
+    @Override
+    public <T, S> void visitCtSwitchExpression(CtSwitchExpression<T, S> switchExpression) {
+        //TODO: missing, implementation needed
     }
 
     @Override
@@ -614,17 +729,37 @@ public class ControlFlowBuilder implements CtVisitor {
     }
 
     @Override
+    public void visitCtWildcardReference(CtWildcardReference wildcardReference) {
+
+    }
+
+    @Override
+    public <T> void visitCtIntersectionTypeReference(CtIntersectionTypeReference<T> reference) {
+
+    }
+
+    @Override
     public <T> void visitCtTypeReference(CtTypeReference<T> reference) {
 
     }
 
     @Override
-    public <T> void visitCtUnaryOperator(CtUnaryOperator<T> operator) {
-        defaultAction(STATEMENT, operator);
+    public <T> void visitCtTypeAccess(CtTypeAccess<T> typeAccess) {
+
     }
 
     @Override
-    public <T> void visitCtVariableAccess(CtVariableAccess<T> variableAccess) {
+    public <T> void visitCtUnaryOperator(CtUnaryOperator<T> operator) {
+        defaultAction(BranchKind.STATEMENT, operator);
+    }
+
+    @Override
+    public <T> void visitCtVariableRead(CtVariableRead<T> variableRead) {
+
+    }
+
+    @Override
+    public <T> void visitCtVariableWrite(CtVariableWrite<T> variableWrite) {
 
     }
 
@@ -632,10 +767,10 @@ public class ControlFlowBuilder implements CtVisitor {
     public void visitCtWhile(CtWhile whileLoop) {
         registerStatementLabel(whileLoop);
 
-        ControlFlowNode convergenceNode = new ControlFlowNode(null, result, CONVERGE);
+        ControlFlowNode convergenceNode = new ControlFlowNode(null, result, BranchKind.CONVERGE);
         breakingBad.push(convergenceNode);
 
-        ControlFlowNode branch = new ControlFlowNode(whileLoop.getLoopingExpression(), result, BRANCH);
+        ControlFlowNode branch = new ControlFlowNode(whileLoop.getLoopingExpression(), result, BranchKind.BRANCH);
         continueBad.push(branch);
 
         tryAddEdge(lastNode, branch);
@@ -653,4 +788,96 @@ public class ControlFlowBuilder implements CtVisitor {
     public <T> void visitCtAnnotationFieldAccess(CtAnnotationFieldAccess<T> annotationFieldAccess) {
 
     }
+
+    @Override
+    public <T> void visitCtFieldRead(CtFieldRead<T> fieldRead) {
+
+    }
+
+    @Override
+    public <T> void visitCtFieldWrite(CtFieldWrite<T> fieldWrite) {
+
+    }
+
+    @Override
+    public <T> void visitCtSuperAccess(CtSuperAccess<T> f) {
+
+    }
+
+    @Override
+    public void visitCtComment(CtComment comment) {
+
+    }
+
+    @Override
+    public void visitCtJavaDoc(CtJavaDoc comment) {
+
+    }
+
+    @Override
+    public void visitCtJavaDocTag(CtJavaDocTag docTag) {
+
+    }
+
+    @Override
+    public void visitCtImport(CtImport ctImport) {
+
+    }
+
+    @Override
+    public void visitCtModule(CtModule module) {
+
+    }
+
+    @Override
+    public void visitCtModuleReference(CtModuleReference moduleReference) {
+
+    }
+
+    @Override
+    public void visitCtPackageExport(CtPackageExport moduleExport) {
+
+    }
+
+    @Override
+    public void visitCtModuleRequirement(CtModuleRequirement moduleRequirement) {
+
+    }
+
+    @Override
+    public void visitCtProvidedService(CtProvidedService moduleProvidedService) {
+
+    }
+
+    @Override
+    public void visitCtUsedService(CtUsedService usedService) {
+
+    }
+
+    @Override
+    public void visitCtCompilationUnit(CtCompilationUnit compilationUnit) {
+
+    }
+
+    @Override
+    public void visitCtPackageDeclaration(CtPackageDeclaration packageDeclaration) {
+
+    }
+
+    @Override
+    public void visitCtTypeMemberWildcardImportReference(CtTypeMemberWildcardImportReference wildcardReference) {
+
+    }
+
+    @Override
+    public void visitCtYieldStatement(CtYieldStatement ctYieldStatement) {
+
+    }
+
+//	@Override
+//	public void visitCtYieldStatement(CtYieldStatement statement) {
+//		// TODO Auto-generated method stub
+//		//add because java14 switches, stub because not implemented
+//	}
+
 }
