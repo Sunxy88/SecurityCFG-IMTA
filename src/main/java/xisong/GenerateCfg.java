@@ -26,11 +26,6 @@ public class GenerateCfg {
         }
     }
 
-    /*
-    * It is necessary to give target folder and corresponding version.
-    * The version of Java is 7 by default.
-    * TODO: It's necessary to update spoon because current version of spoon supports only JDK1.7.
-    * */
     public GenerateCfg(String folder) throws Exception {
         this(folder, 11);
     }
@@ -65,5 +60,14 @@ public class GenerateCfg {
 
     public String toGraphVizText(boolean simplify) {
         return getCFG(simplify).toGraphVisText();
+    }
+
+    public ControlFlowBuilder getBuilder() {
+        return builder;
+    }
+
+
+    public Factory getFactory() {
+        return factory;
     }
 }
