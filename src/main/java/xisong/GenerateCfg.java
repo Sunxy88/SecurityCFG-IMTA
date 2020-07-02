@@ -49,7 +49,7 @@ public class GenerateCfg {
     * No simplify by default
     * */
     public ControlFlowGraph getCFG() {
-        return getCFG(false);
+        return getCFG(true);
     }
 
     public ControlFlowGraph getCFG(boolean simplify) {

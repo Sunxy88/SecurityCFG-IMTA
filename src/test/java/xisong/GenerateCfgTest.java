@@ -22,4 +22,10 @@ public class GenerateCfgTest {
         String folder = this.getClass().getResource("/control-flow/ForStatement").toURI().getPath();
         System.out.println(generatorTest(folder));
     }
+
+    @Test
+    public void breakStatementTest() throws Exception {
+            String folder = this.getClass().getResource("/control-flow/BreakStatement").toURI().getPath();
+            System.out.println(generatorTest(folder));
+    }
 }
