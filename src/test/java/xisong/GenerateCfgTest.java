@@ -25,7 +25,13 @@ public class GenerateCfgTest {
 
     @Test
     public void breakStatementTest() throws Exception {
-            String folder = this.getClass().getResource("/control-flow/BreakStatement").toURI().getPath();
-            System.out.println(generatorTest(folder));
+        String folder = this.getClass().getResource("/control-flow/BreakStatement").toURI().getPath();
+        System.out.println(generatorTest(folder));
+    }
+
+    @Test
+    public void webApplicationTest() throws Exception {
+        String folder = this.getClass().getResource("/control-flow/WebApplication").toURI().getPath();
+        System.out.println(generatorTest(folder));
     }
 }
