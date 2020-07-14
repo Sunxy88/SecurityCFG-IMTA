@@ -5,6 +5,8 @@ are in the [folder here](src/test/resources/control-flow)
  [here](src/test/java/xisong/QueryParticularFunction.java)
 3. For a Web application, a graph could be generated but **need to be refined**.
 Because there are some strange begin blocks. 
+4. Shiro examples from :
+    1. https://github.com/jjoe64/shiroexample
 
 # TODO
 1. The offered maven dependency of [spoon](https://github.com/INRIA/spoon/tree/master/spoon-control-flow) does not work.

@@ -34,4 +34,10 @@ public class GenerateCfgTest {
         String folder = this.getClass().getResource("/control-flow/WebApplication").toURI().getPath();
         System.out.println(generatorTest(folder));
     }
+
+    @Test
+    public void webApplicationToFileTest() throws Exception {
+        String folder = this.getClass().getResource("/control-flow/WebApplication").toURI().getPath();
+        new GenerateCfg(folder, 7).graphVizTextToFile("result.dot"); // Your own path
+    }
 }

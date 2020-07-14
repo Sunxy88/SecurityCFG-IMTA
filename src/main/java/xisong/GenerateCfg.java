@@ -12,6 +12,8 @@ import spoon.reflect.declaration.CtMethod;
 import spoon.reflect.factory.Factory;
 import spoon.support.QueueProcessingManager;
 
+import java.io.*;
+
 public class GenerateCfg {
     private String folder;
     private ControlFlowBuilder builder;
@@ -40,6 +42,10 @@ public class GenerateCfg {
         this.pm.addProcessor(this.processor);
     }
 
+    public Factory getFactory() {
+        return factory;
+    }
+
     /*
     * No simplify by default
     * */
@@ -66,8 +72,22 @@ public class GenerateCfg {
         return builder;
     }
 
-
-    public Factory getFactory() {
-        return factory;
+    public void graphVizTextToFile(String target) {
+        File file = new File(target);
+        try {
+            file.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        String content = toGraphVizText(true);
+        try (OutputStream os = new FileOutputStream(file)) {
+            byte[] data = content.getBytes();
+            os.write(data);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
+
 }

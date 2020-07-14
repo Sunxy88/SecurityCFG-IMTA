@@ -72,4 +72,14 @@ public class QueryParticularFunction {
             assertEquals(method.getSimpleName(), target);
         }
     }
+
+    @Test
+    public void MethodSearcherMethod1() {
+        String target = "method1";
+        List<CtMethod> methods = new MethodSearcher(folder).getMethodByName(target);
+        for (CtMethod method : methods) {
+            System.out.println(method);
+            assertEquals(method.getSimpleName(), target);
+        }
+    }
 }
