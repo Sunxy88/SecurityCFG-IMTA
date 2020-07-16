@@ -33,16 +33,16 @@ public class UserController {
 
             subject.login(token);
         } catch (UnknownAccountException e) {
-            model.addAttribute("error", "账号不存在");
+            model.addAttribute("error", "Account does not exsist");
             return "login";
         } catch (IncorrectCredentialsException e) {
-            model.addAttribute("error", "用户名/密码错误");
+            model.addAttribute("error", "Username/password incorrect");
             return "login";
         } catch (LockedAccountException e) {
-            model.addAttribute("error", "账号被锁定");
+            model.addAttribute("error", "Account is locked");
             return "login";
         } catch (Exception e) {
-            model.addAttribute("error", "其他异常信息");
+            model.addAttribute("error", "Something wrong");
             return "login";
         }
 
@@ -56,36 +56,25 @@ public class UserController {
         return "redirect:nopermission.jsp";
     }
 
-    /**
-     * 用户增加
-     */
     @RequestMapping(value="/add")
     @ResponseBody
     public String add() throws  Exception{
         return "add users";
     }
 
-    /**
-     * 用户删除
-     */
     @RequestMapping(value="/delete",method=RequestMethod.GET)
     @RequiresPermissions(value="users:delete")
     @ResponseBody
     public String delete() throws  Exception{
         return "delete users";
     }
-
-    /**
-     * function：用户退出登录
-     * @return
-     */
-    @RequestMapping(value="/logout",method=RequestMethod.GET)
+    Mapping(value="/logout",method=RequestMethod.GET)
     public String logout(){
         Subject subject = SecurityUtils.getSubject();
         if (subject.isAuthenticated()) {
             subject.logout();
         }
-        System.out.println("您已退出登录");
+        System.out.println("Sign out");
         return "login";
     }
 }

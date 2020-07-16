@@ -1,8 +1,11 @@
 # Read me
 Work progress and things to do for every week.
 ## 3rd Week
-1. Obtain the block where a specific function is called. Check [here](src/test/java/xisong/MatcherTest.java)
-2. 
+1. Obtain the block where a specific function is called. Check [here](src/test/java/xisong/MatcherTest.java).
+For example:![demo1](src/test/resources/shiro-example/3/DemoPicture.png)
+
+**TODO**
+1. Redundant statements occur. In `if else if` structure, `if` statements are repeatedly considered qualified while they are not.
 
 ## 2nd Week
 1. Shiro examples from :
