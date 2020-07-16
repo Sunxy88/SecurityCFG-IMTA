@@ -5,6 +5,7 @@ import org.apache.shiro.authc.UsernamePasswordToken;
 import spoon.Launcher;
 import spoon.SpoonAPI;
 import spoon.legacy.NameFilter;
+import spoon.reflect.code.CtIf;
 import spoon.reflect.code.CtStatement;
 import spoon.reflect.declaration.CtClass;
 import spoon.reflect.declaration.CtElement;
@@ -12,8 +13,7 @@ import spoon.reflect.declaration.CtMethod;
 import spoon.template.TemplateMatcher;
 import spoon.template.TemplateParameter;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class SecurityElementMatcher {
     private TemplateParameter<Subject> _subject_;
@@ -29,9 +29,15 @@ public class SecurityElementMatcher {
         this.driverSpoon.buildModel();
     }
 
+    /*
+    * Get specific statements according to a given statement.
+    * */
     public List<CtElement> getStatements(String target, String filter) {
         CtClass<?> templateClass = driverSpoon.getFactory().Class().get(SecurityElementMatcher.class);
-        CtStatement templateRoot = ((CtMethod) templateClass.getElements(new NameFilter(filter)).get(0)).getBody().getStatement(0);
+        CtStatement templateRoot = ((CtMethod) templateClass
+                .getElements(new NameFilter(filter))
+                .get(0)).getBody()
+                .getStatement(0);
         TemplateMatcher matcher = new TemplateMatcher(templateRoot);
 
         SpoonAPI targetDriver = new Launcher();
@@ -49,6 +55,34 @@ public class SecurityElementMatcher {
         return getStatements(target, ROLE);
     }
 
+    public List<CtElement> isAuthenticatedStatements(String target) {
+        return getStatements(target, AUTHENTICATED);
+    }
+
+    /*
+    * Get if statement by a filter.
+    * */
+    public List<CtElement> getIfStatements(String target, String filter) {
+        List<CtElement> originElements = getStatements(target, filter);
+        Set<CtElement> ifElements = new HashSet<>();
+        for (CtElement element : originElements) {
+            ifElements.add(element.getParent((CtIf ctif) -> true));     // Using this filter could get if structures we want.
+        }
+        return new ArrayList<>(ifElements);
+    }
+
+    public List<CtElement> getIfLoginStatements(String target) {
+        return getIfStatements(target, LOGIN);
+    }
+
+    public List<CtElement> hasIfRoleStatements(String target) {
+        return getIfStatements(target, ROLE);
+    }
+
+    public List<CtElement> ifIsAuthenticatedStatements(String target) {
+        return getIfStatements(target, AUTHENTICATED);
+    }
+
     public void loginMatcher() {
         this._subject_.S().login(this._token_.S());
     }
@@ -57,6 +91,11 @@ public class SecurityElementMatcher {
         _subject_.S().hasRole(_string_.S());
     }
 
+    public void isAuthenticatedMatcher() {
+        _subject_.S().isAuthenticated();
+    }
+
     public static final String LOGIN = "loginMatcher";
     public static final String ROLE = "hasRoleMatcher";
+    public static final String AUTHENTICATED = "isAuthenticatedMatcher";
 }

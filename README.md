@@ -1,5 +1,20 @@
 # Read me
 Work progress and things to do for every week.
+## 3rd Week
+1. Obtain the block where a specific function is called. Check [here](src/test/java/xisong/MatcherTest.java)
+2. 
+
+## 2nd Week
+1. Shiro examples from :
+    1. https://github.com/jjoe64/shiroexample
+    2. little demo written by myself
+2. [SecurityElementMatcher](src/main/java/xisong/SecurityElementMatcher.java) could find specified security element in given codes.
+3. Result CFG could be stored in given directory in [GenerateCfg](src/main/java/xisong/GenerateCfg.java).
+
+**TODO**
+1. Still need some time to search more applications using shiro.
+2. Find a way to obtain methods called in code blocks.
+
 ## 1st Week
 1. Examples of different statements and corresponding control flow graphs 
 are in the [folder here](src/test/resources/control-flow).
@@ -12,14 +27,3 @@ Because there are some strange begin blocks.
 1. The offered maven dependency of [spoon](https://github.com/INRIA/spoon/tree/master/spoon-control-flow) does not work.
  Source code is directly used. **Possible to use package instead?** 
 2. Filter is used instead of query to search methods, **Possible to use `CtQuery`?**
-
-## 2nd week
-1. Shiro examples from :
-    1. https://github.com/jjoe64/shiroexample
-    2. little demo written by myself
-2. [SecurityElementMatcher](src/main/java/xisong/SecurityElementMatcher.java) could find specified security element in given codes.
-3. Result CFG could be stored in given directory in [GenerateCfg](src/main/java/xisong/GenerateCfg.java).
-
-**TODO**
-1. Still need some time to search more applications using shiro.
-2. Find a way to obtain methods called in code blocks.
