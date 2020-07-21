@@ -10,6 +10,7 @@ import spoon.reflect.code.CtStatement;
 import spoon.reflect.declaration.CtClass;
 import spoon.reflect.declaration.CtElement;
 import spoon.reflect.declaration.CtMethod;
+import spoon.reflect.path.CtRole;
 import spoon.template.TemplateMatcher;
 import spoon.template.TemplateParameter;
 

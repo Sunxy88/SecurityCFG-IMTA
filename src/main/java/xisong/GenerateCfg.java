@@ -6,8 +6,6 @@ import fr.inria.controlflow.ControlFlowGraph;
 import spoon.processing.AbstractProcessor;
 import spoon.processing.ProcessingManager;
 import spoon.processing.Processor;
-import spoon.reflect.code.CtStatement;
-import spoon.reflect.declaration.CtElement;
 import spoon.reflect.declaration.CtMethod;
 import spoon.reflect.factory.Factory;
 import spoon.support.QueueProcessingManager;

@@ -22,7 +22,7 @@ public class MatcherTest {
     @Test
     public void hasRoleMatcherTest3() throws Exception {
         String matcherFolder = "src/main/java/xisong/SecurityElementMatcher.java";
-        String targetFolder = this.getClass().getResource("/shiro-example/2/").toURI().getPath();
+        String targetFolder = this.getClass().getResource("/shiro-example/5/").toURI().getPath();
         SecurityElementMatcher securityElementMatcher = new SecurityElementMatcher(matcherFolder);
         List<CtElement> elements = securityElementMatcher.hasRoleStatements(targetFolder);
         for (CtElement element : elements) {
@@ -47,7 +47,7 @@ public class MatcherTest {
     @Test
     public void ifHasRoleMatcherTest() throws Exception {
         String matcherFolder = "src/main/java/xisong/SecurityElementMatcher.java";
-        String targetFolder = this.getClass().getResource("/shiro-example/3/").toURI().getPath();
+        String targetFolder = this.getClass().getResource("/shiro-example/7/").toURI().getPath();
         SecurityElementMatcher securityElementMatcher = new SecurityElementMatcher(matcherFolder);
         List<CtElement> elements = securityElementMatcher.hasIfRoleStatements(targetFolder);
         for (CtElement element : elements) {
