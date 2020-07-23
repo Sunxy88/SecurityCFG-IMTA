@@ -1,5 +1,9 @@
 # Read me
 Work progress and things to do for every week.
+
+## 4th Week
+1. Obtain all statements corresponding to each role.
+
 ## 3rd Week
 1. Obtain the block where a specific function is called. Check [here](src/test/java/xisong/MatcherTest.java).
 For example:![demo1](src/test/resources/shiro-example/3/DemoPicture.png)

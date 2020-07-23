@@ -47,6 +47,7 @@ public class UserController {
         }
 
         if(subject.hasRole("admin") || subject.hasRole("superadmin")) {
+            subject.toString();
             return "admin/index";
         } else if(subject.hasRole("student")) {
             return "student/index";

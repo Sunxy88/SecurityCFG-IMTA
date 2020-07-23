@@ -2,9 +2,12 @@ package xisong;
 
 import org.junit.Test;
 import spoon.reflect.code.CtIf;
+import spoon.reflect.code.CtStatement;
 import spoon.reflect.declaration.CtElement;
 
-import java.util.List;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class MatcherTest {
 
@@ -47,11 +50,23 @@ public class MatcherTest {
     @Test
     public void ifHasRoleMatcherTest() throws Exception {
         String matcherFolder = "src/main/java/xisong/SecurityElementMatcher.java";
-        String targetFolder = this.getClass().getResource("/shiro-example/7/").toURI().getPath();
+        String targetFolder = this.getClass().getResource("/shiro-example/3/").toURI().getPath();
         SecurityElementMatcher securityElementMatcher = new SecurityElementMatcher(matcherFolder);
-        List<CtElement> elements = securityElementMatcher.hasIfRoleStatements(targetFolder);
-        for (CtElement element : elements) {
-            System.out.println(element);
-        }
+        List<CtIf> elements = securityElementMatcher.hasIfRoleStatements(targetFolder);
+        CtElement element = elements.get(0).getDirectChildren().get(1);
+        System.out.println(element.getElements((CtStatement statement) -> true));
+
+//        for (CtIf element : elements) {
+//            System.out.println(element.getDirectChildren());
+//        }
+    }
+
+    @Test
+    public void roleStatementMapTest() throws Exception {
+        String matcherFolder = "src/main/java/xisong/SecurityElementMatcher.java";
+        String targetFolder = this.getClass().getResource("/shiro-example/3/").toURI().getPath();
+        SecurityElementMatcher securityElementMatcher = new SecurityElementMatcher(matcherFolder);
+        Map<String, Set<CtStatement>> roleStatements = securityElementMatcher.roleStatementMap(targetFolder);
+        System.out.println(roleStatements);
     }
 }
