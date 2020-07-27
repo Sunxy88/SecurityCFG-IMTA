@@ -125,8 +125,8 @@ public class SecurityElementMatcher {
             List<CtStatement> allElement = ifs.getElements((CtStatement statement) -> true);
             for (CtStatement statement : allElement) {
                 if (!(statement instanceof CtIf)
-                        && statement.toString().contains("{")
-                        && statement.toString().contains("hasRole")) {
+                        && !statement.toString().contains("{")
+                        && !statement.toString().contains("hasRole")) {
                     tempElement.add(statement);
                 }
             }
