@@ -64,9 +64,11 @@ public class MatcherTest {
     @Test
     public void roleStatementMapTest() throws Exception {
         String matcherFolder = "src/main/java/xisong/SecurityElementMatcher.java";
-        String targetFolder = this.getClass().getResource("/shiro-example/3/").toURI().getPath();
+        String targetFolder = this.getClass().getResource("/shiro-example/9/").toURI().getPath();
         SecurityElementMatcher securityElementMatcher = new SecurityElementMatcher(matcherFolder);
         Map<String, Set<CtStatement>> roleStatements = securityElementMatcher.roleStatementMap(targetFolder);
-        System.out.println(roleStatements);
+        for (Map.Entry<String, Set<CtStatement>> entry : roleStatements.entrySet()) {
+            System.out.println(entry.getKey() + ": " + entry.getValue());
+        }
     }
 }

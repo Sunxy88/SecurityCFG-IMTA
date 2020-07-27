@@ -3,6 +3,7 @@ Work progress and things to do for every week.
 
 ## 4th Week
 1. Obtain all statements corresponding to each role.
+2. Add 3 new complete application as test cases.
 
 ## 3rd Week
 1. Obtain the block where a specific function is called. Check [here](src/test/java/xisong/MatcherTest.java).
