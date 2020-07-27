@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tgwy.dao.OutRainDao">
+	<resultMap type="OutRainEntity" id="OutRainResult">
+		<result property="num" column="num" />
+		<result property="sensorId" column="sensor_id" />
+		<result property="value" column="value" />
+		<result property="unix" column="unix" />
+		<result property="dateTime" column="datetime" />
+	</resultMap>
+
+	<select id="getRainInfo" resultMap="OutRainResult">
+	    select * from out_rain
+	</select>
+	
+	<select id="getRainLegend" resultType="String">
+	     select distinct CONCAT('雨量监测(',t.sensor_id,')点') from out_rain t order by t.sensor_id;
+	</select>
+	
+	
+	
+	<select id="getRainLegendSensorID" resultType="java.lang.Integer">
+	     select distinct t.sensor_id from out_rain t order by t.sensor_id;
+	</select>
+	
+	<select id="getRainValue" resultType="java.lang.Double">
+	    select t.value from out_rain t;
+	</select>
+	
+	<select id="getRainValueBySensorId" parameterType="java.lang.Integer" resultType="String">
+	    select t.value from out_rain t where t.sensor_id=#{sensorId}
+	</select>
+	
+	<!-- 获取丢失测量点的时间集合 -->
+	<select id="getRainCategoryBySensorId" resultType="String">
+	    select distinct date_format(t.datetime,'%Y-%m-%d') from out_rain t where date_format(t.datetime,'%Y-%m-%d') 
+	    not in (select date_format(t.datetime,'%Y-%m-%d') from out_rain t where t.sensor_id=#{0} );
+	</select>
+	
+	<!-- 获取正常测量点的时间结合 -->
+	<select id="getRainNormaleCategoryBySensorId" resultType="String">
+	    select distinct date_format(t.datetime,'%Y-%m-%d') from out_rain t where t.sensor_id=#{0} order by t.datetime;
+	</select>
+	
+	<!-- //通过ID和时间获取特定的值 -->
+	<select id="getRainValueByidAndTime" resultType="java.lang.Double">
+	    select t.value from out_rain t where t.sensor_id=#{0} and date_format(t.datetime,'%Y-%m-%d') = date_format(#{1},'%Y-%m-%d');
+	</select>
+	
+	<select id="getRainCategory" resultType="String">
+	    SELECT distinct DATE_FORMAT(t.datetime,'%Y-%m-%d') FROM out_rain t order by t.datetime
+	</select>
+	
+	
+	
+	
+	
+	
+	
+	
+	<!-- History -->
+	
+	<select id="getRainCategoryOverLoad" resultType="String">
+	    SELECT distinct DATE_FORMAT(t.datetime,'%Y-%m-%d') FROM out_rain t where  unix_timestamp(t.datetime) &gt; 
+	    unix_timestamp(DATE_FORMAT(#{0},'%Y-%m-%d %h:%i')) and unix_timestamp(t.datetime) &lt; unix_timestamp(DATE_FORMAT(#{1},'%Y-%m-%d %h:%i'))  order by t.datetime
+	</select>
+	
+	<select id="getRainHistoryQueryValue" resultType="java.lang.Double" >
+	    select t.value from out_rain t where t.sensor_id=#{0} and unix_timestamp(t.datetime) &gt; 
+	    unix_timestamp(DATE_FORMAT(#{1},'%Y-%m-%d %h:%i')) and unix_timestamp(t.datetime) &lt; unix_timestamp(DATE_FORMAT(#{2},'%Y-%m-%d %h:%i')) 
+	    and DATE_FORMAT(#{3},'%Y-%m-%d');
+	</select>
+	
+	
+	<select id="getRainQueryCategoryBySensorId" resultType="String">
+	    select distinct date_format(t.datetime,'%Y-%m-%d') from out_rain t 
+	    where      unix_timestamp(t.datetime) &gt; unix_timestamp(DATE_FORMAT(#{1},'%Y-%m-%d %h:%i')) 
+	    	  and  unix_timestamp(t.datetime) &lt; unix_timestamp(DATE_FORMAT(#{2},'%Y-%m-%d %h:%i'))  
+	    	  and  date_format(t.datetime,'%Y-%m-%d') not in (select date_format(t.datetime,'%Y-%m-%d') from out_rain t where t.sensor_id=#{0} );
+	</select>
+	
+	<select id="getRainQueryNormaleCategoryBySensorId" resultType="String">
+	    select distinct date_format(t.datetime,'%Y-%m-%d') from out_rain t
+	    where     unix_timestamp(t.datetime) &gt; unix_timestamp(DATE_FORMAT(#{1},'%Y-%m-%d %h:%i')) 
+	    	   and  unix_timestamp(t.datetime) &lt; unix_timestamp(DATE_FORMAT(#{2},'%Y-%m-%d %h:%i'))  
+	    	   and t.sensor_id=#{0} 
+	    order by t.datetime;
+	</select>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+</mapper> 
