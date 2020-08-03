@@ -1,5 +1,6 @@
 package xisong;
 
+import org.apache.shiro.authz.Permission;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import spoon.Launcher;
@@ -7,6 +8,7 @@ import spoon.SpoonAPI;
 import spoon.legacy.NameFilter;
 import spoon.reflect.code.CtIf;
 import spoon.reflect.code.CtStatement;
+import spoon.reflect.code.CtTry;
 import spoon.reflect.declaration.CtClass;
 import spoon.reflect.declaration.CtElement;
 import spoon.reflect.declaration.CtMethod;
@@ -14,6 +16,7 @@ import spoon.reflect.path.CtRole;
 import spoon.template.TemplateMatcher;
 import spoon.template.TemplateParameter;
 
+import javax.management.relation.Role;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -22,6 +25,7 @@ public class SecurityElementMatcher {
     private TemplateParameter<Subject> _subject_;
     private TemplateParameter<UsernamePasswordToken> _token_;
     private TemplateParameter<String> _string_;
+    private TemplateParameter<Permission> _permission__;
     private SpoonAPI driverSpoon;
     private String folder;
 
@@ -62,6 +66,32 @@ public class SecurityElementMatcher {
         return getStatements(target, AUTHENTICATED);
     }
 
+    public List<CtMethod>getMethodElements(String target, String filter) {
+        List<CtElement> originalElements = getStatements(target, filter);
+        Set<CtMethod> tryElements = new HashSet<>();
+        for (CtElement element : originalElements) {
+            tryElements.add(element.getParent((CtMethod ctMethod) -> true));
+        }
+        return new ArrayList<>(tryElements);
+    }
+
+    public List<CtMethod> checkRoleMethods(String target) {
+        return getMethodElements(target, CHECK_ROLE);
+    }
+
+    public List<CtTry> getTryStatements(String target, String filter) {
+        List<CtElement> originalElements = getStatements(target, filter);
+        Set<CtTry> tryElements = new HashSet<>();
+        for (CtElement element : originalElements) {
+            tryElements.add(element.getParent((CtTry ctTry) -> true));
+        }
+        return new ArrayList<>(tryElements);
+    }
+
+    public List<CtTry> checkRoleTryStatements(String target) {
+        return getTryStatements(target, CHECK_ROLE);
+    }
+
     /*
     * Get if statement by a filter.
     * */
@@ -98,10 +128,19 @@ public class SecurityElementMatcher {
         _subject_.S().isAuthenticated();
     }
 
+    public void checkRoleMatcher() {
+        _subject_.S().checkRole(_string_.S());
+    }
+
     /*
     * Get all statements in an if block corresponding to each role.
+    * TODO: Merge all different statements corresponding roles in a map structure
     * */
     public Map<String, Set<CtStatement>> roleStatementMap(String target) {
+        return ifRoleStatementMap(target);
+    }
+
+    public Map<String, Set<CtStatement>> ifRoleStatementMap(String target) {
         List<CtIf> ifStructures = hasIfRoleStatements(target);
         Map<String, Set<CtStatement>> roleStatements = new HashMap<>();
         String pattern = "\\w+";
@@ -130,21 +169,59 @@ public class SecurityElementMatcher {
                     tempElement.add(statement);
                 }
             }
-            for (String role : tempRoles) {
-                Set<CtStatement> t = roleStatements.get(role);
-                if (t == null) {
-                    roleStatements.put(role, new HashSet<>(tempElement));
-                } else {
-                    t.addAll(tempElement);
-                    roleStatements.put(role, t);
-                }
-            }
+            updateRoleStatementMap(tempRoles, roleStatements, new HashSet<>(tempElement));
         }
         return roleStatements;
 
     }
 
+    public Map<String, Set<CtStatement>> methodStatementMap(String target) {
+        List<CtMethod> methods = checkRoleMethods(target);
+        Map<String, Set<CtStatement>> roleStatement = new HashMap<>();
+        for (CtMethod example : methods) {
+            List<CtStatement> statements = example.getBody().getStatements();
+            Set<CtStatement> st = new HashSet<>();
+            List<String> tempRoles = new ArrayList<>();
+            for (CtStatement s : statements) {
+                if (s.toString().contains("checkRole")) {
+                    String pattern = "\\w+";
+                    String regex = s.toString();
+                    Matcher m = Pattern.compile(pattern).matcher(regex);
+                    boolean methodCalled = false;
+                    while (m.find()) {
+                        String temp = m.group();
+                        if (methodCalled) {
+                            tempRoles.add(temp);
+                            methodCalled = false;
+                        }
+                        if (temp.equals("checkRole")) {
+                            methodCalled = true;
+                        }
+                    }
+                } else {
+                    st.add(s);
+                }
+            }
+            updateRoleStatementMap(tempRoles, roleStatement, st);
+        }
+        return roleStatement;
+
+    }
+
+    private void updateRoleStatementMap(List<String> tempRoles, Map<String, Set<CtStatement>> roleStatement, Set<CtStatement> st) {
+        for (String role : tempRoles) {
+            Set<CtStatement> t = roleStatement.get(role);
+            if (t == null) {
+                roleStatement.put(role, new HashSet<>(st));
+            } else {
+                t.addAll(st);
+                roleStatement.put(role, t);
+            }
+        }
+    }
+
     public static final String LOGIN = "loginMatcher";
     public static final String ROLE = "hasRoleMatcher";
     public static final String AUTHENTICATED = "isAuthenticatedMatcher";
+    public static final String CHECK_ROLE = "checkRoleMatcher";
 }
