@@ -12,11 +12,9 @@ import spoon.reflect.code.CtTry;
 import spoon.reflect.declaration.CtClass;
 import spoon.reflect.declaration.CtElement;
 import spoon.reflect.declaration.CtMethod;
-import spoon.reflect.path.CtRole;
 import spoon.template.TemplateMatcher;
 import spoon.template.TemplateParameter;
 
-import javax.management.relation.Role;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -116,28 +114,14 @@ public class SecurityElementMatcher {
         return getIfStatements(target, AUTHENTICATED);
     }
 
-    public void loginMatcher() {
-        this._subject_.S().login(this._token_.S());
-    }
-
-    public void hasRoleMatcher() {
-        _subject_.S().hasRole(_string_.S());
-    }
-
-    public void isAuthenticatedMatcher() {
-        _subject_.S().isAuthenticated();
-    }
-
-    public void checkRoleMatcher() {
-        _subject_.S().checkRole(_string_.S());
-    }
-
     /*
     * Get all statements in an if block corresponding to each role.
-    * TODO: Merge all different statements corresponding roles in a map structure
     * */
     public Map<String, Set<CtStatement>> roleStatementMap(String target) {
-        return ifRoleStatementMap(target);
+        Map<String, Set<CtStatement>> map1 = ifRoleStatementMap(target);
+        Map<String, Set<CtStatement>> map2 = methodStatementMap(target);
+        map1.putAll(map2);
+        return map1;
     }
 
     public Map<String, Set<CtStatement>> ifRoleStatementMap(String target) {
@@ -156,7 +140,7 @@ public class SecurityElementMatcher {
                     tempRoles.add(temp);
                     methodCalled = false;
                 }
-                if (temp.equals("hasRole")) {
+                if (temp.equals("hasRole") || temp.equals("isPermitted")) {
                     methodCalled = true;
                 }
             }
@@ -208,6 +192,39 @@ public class SecurityElementMatcher {
 
     }
 
+    public Map<String, Set<CtStatement>> tryStatementMap(String target) {
+        List<CtTry> methods = checkRoleTryStatements(target);
+        Map<String, Set<CtStatement>> roleStatement = new HashMap<>();
+        for (CtTry example : methods) {
+            List<CtStatement> statements = example.getBody().getStatements();
+            Set<CtStatement> st = new HashSet<>();
+            List<String> tempRoles = new ArrayList<>();
+            for (CtStatement s : statements) {
+                if (s.toString().contains("checkRole")) {
+                    String pattern = "\\w+";
+                    String regex = s.toString();
+                    Matcher m = Pattern.compile(pattern).matcher(regex);
+                    boolean methodCalled = false;
+                    while (m.find()) {
+                        String temp = m.group();
+                        if (methodCalled) {
+                            tempRoles.add(temp);
+                            methodCalled = false;
+                        }
+                        if (temp.equals("checkRole")) {
+                            methodCalled = true;
+                        }
+                    }
+                } else {
+                    st.add(s);
+                }
+            }
+            updateRoleStatementMap(tempRoles, roleStatement, st);
+        }
+        return roleStatement;
+
+    }
+
     private void updateRoleStatementMap(List<String> tempRoles, Map<String, Set<CtStatement>> roleStatement, Set<CtStatement> st) {
         for (String role : tempRoles) {
             Set<CtStatement> t = roleStatement.get(role);
@@ -224,4 +241,20 @@ public class SecurityElementMatcher {
     public static final String ROLE = "hasRoleMatcher";
     public static final String AUTHENTICATED = "isAuthenticatedMatcher";
     public static final String CHECK_ROLE = "checkRoleMatcher";
+
+    public void loginMatcher() {
+        this._subject_.S().login(this._token_.S());
+    }
+
+    public void hasRoleMatcher() {
+        _subject_.S().hasRole(_string_.S());
+    }
+
+    public void isAuthenticatedMatcher() {
+        _subject_.S().isAuthenticated();
+    }
+
+    public void checkRoleMatcher() {
+        _subject_.S().checkRole(_string_.S());
+    }
 }

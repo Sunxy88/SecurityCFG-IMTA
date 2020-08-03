@@ -5,15 +5,16 @@ Work progress and things to do for every week.
 DONE:
 1. `subject.checkRole()` in try-catch structure, implemented [here in method `getTryStatements`](src/main/java/xisong/SecurityElementMatcher.java)
     * One problem : no example found
-2. `subject.checkRole()` in a function who throws an exception if something goes wrong
+2. `subject.checkRole()` in a function who throws an exception if something goes wrong in the method `methodStatementMap(String target)` in class [`SecurityElementMatcher`](src/main/java/xisong/SecurityElementMatcher.java)
     * Able to get all methods that contain a `subject.checkRole()`
     * Working on extraction of all statemetns after the call of `subject.checkRole()`
+3. `subject.isPermitted()` in if structure
+4. `subject.checkRole()` in a try-catch structure
 
 TODO:
-1. Obtain all statments excuted after the calling of security verification functions :
-    1. `subject.isPermitted()` in if structure
-    3. `subject.checkRole()` in a function who throws an exception if something goes wrong
-    4. `subject.isPermitted()` in if structure
+1. Test need to be done for `subject.checkRole()` in a try-catch structure. However, no example found until now.
+2. Get more test exmaples in Github.
+    
 
 ## 4th Week
 1. Obtain all statements corresponding to each role.
