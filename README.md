@@ -2,6 +2,14 @@
 Work progress and things to do for every week.
 
 ## 5th Week
+Simple explication of class [SecurityElementMatcher](src/main/java/xisong/SecurityElementMatcher.java):
+1. Key function is `roleStatementMap()` who aims to get a role-statements map.
+2. Following steps are taken for the object:
+    1. Use *matcher* in spoon to get all eligible code elements
+    2. Use *filter* in spoon to get specific strucre, like if or try-catch
+    3. Use regular expression to get roles
+    4. Put statements in a list and then make this list bound with corresponding role in a map
+
 DONE:
 1. `subject.checkRole()` in try-catch structure, implemented [here in method `getTryStatements`](src/main/java/xisong/SecurityElementMatcher.java)
     * One problem : no example found
