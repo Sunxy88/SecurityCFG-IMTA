@@ -9,7 +9,6 @@ DONE:
     * Able to get all methods that contain a `subject.checkRole()`
     * Working on extraction of all statemetns after the call of `subject.checkRole()`
 3. `subject.isPermitted()` in if structure
-4. `subject.checkRole()` in a try-catch structure
 
 TODO:
 1. Test need to be done for `subject.checkRole()` in a try-catch structure. However, no example found until now.
