@@ -21,7 +21,6 @@ DONE:
 TODO:
 1. Test need to be done for `subject.checkRole()` in a try-catch structure. However, no example found until now.
 2. Get more test exmaples in Github.
-3. Simplify codes in [the class `SecurityElementMatcher`](src/main/java/xisong/SecurityElementMatcher.java)
     
 
 ## 4th Week

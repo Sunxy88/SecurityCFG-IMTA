@@ -109,6 +109,6 @@ public class MatcherTest {
         String targetFolder = this.getClass().getResource("/shiro-example/11/").toURI().getPath();
         SecurityElementMatcher securityElementMatcher = new SecurityElementMatcher(matcherFolder);
         Map<String, Set<CtStatement>> map = securityElementMatcher.roleStatementMap(targetFolder);
-        System.out.println(map.keySet());
+        System.out.println(map);
     }
 }

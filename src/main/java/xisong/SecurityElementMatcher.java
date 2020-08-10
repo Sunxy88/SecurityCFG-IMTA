@@ -6,6 +6,7 @@ import org.apache.shiro.authc.UsernamePasswordToken;
 import spoon.Launcher;
 import spoon.SpoonAPI;
 import spoon.legacy.NameFilter;
+import spoon.reflect.code.CtBlock;
 import spoon.reflect.code.CtIf;
 import spoon.reflect.code.CtStatement;
 import spoon.reflect.code.CtTry;
@@ -163,30 +164,7 @@ public class SecurityElementMatcher {
         List<CtMethod> methods = checkRoleMethods(target);
         Map<String, Set<CtStatement>> roleStatement = new HashMap<>();
         for (CtMethod example : methods) {
-            List<CtStatement> statements = example.getBody().getStatements();
-            Set<CtStatement> st = new HashSet<>();
-            List<String> tempRoles = new ArrayList<>();
-            for (CtStatement s : statements) {
-                if (s.toString().contains("checkRole")) {
-                    String pattern = "\\w+";
-                    String regex = s.toString();
-                    Matcher m = Pattern.compile(pattern).matcher(regex);
-                    boolean methodCalled = false;
-                    while (m.find()) {
-                        String temp = m.group();
-                        if (methodCalled) {
-                            tempRoles.add(temp);
-                            methodCalled = false;
-                        }
-                        if (temp.equals("checkRole")) {
-                            methodCalled = true;
-                        }
-                    }
-                } else {
-                    st.add(s);
-                }
-            }
-            updateRoleStatementMap(tempRoles, roleStatement, st);
+            checkRoleStatementMapHelper(roleStatement, example.getBody());
         }
         return roleStatement;
 
@@ -196,36 +174,15 @@ public class SecurityElementMatcher {
         List<CtTry> methods = checkRoleTryStatements(target);
         Map<String, Set<CtStatement>> roleStatement = new HashMap<>();
         for (CtTry example : methods) {
-            List<CtStatement> statements = example.getBody().getStatements();
-            Set<CtStatement> st = new HashSet<>();
-            List<String> tempRoles = new ArrayList<>();
-            for (CtStatement s : statements) {
-                if (s.toString().contains("checkRole")) {
-                    String pattern = "\\w+";
-                    String regex = s.toString();
-                    Matcher m = Pattern.compile(pattern).matcher(regex);
-                    boolean methodCalled = false;
-                    while (m.find()) {
-                        String temp = m.group();
-                        if (methodCalled) {
-                            tempRoles.add(temp);
-                            methodCalled = false;
-                        }
-                        if (temp.equals("checkRole")) {
-                            methodCalled = true;
-                        }
-                    }
-                } else {
-                    st.add(s);
-                }
-            }
-            updateRoleStatementMap(tempRoles, roleStatement, st);
+            checkRoleStatementMapHelper(roleStatement, example.getBody());
         }
         return roleStatement;
 
     }
 
-    private void updateRoleStatementMap(List<String> tempRoles, Map<String, Set<CtStatement>> roleStatement, Set<CtStatement> st) {
+    private void updateRoleStatementMap(List<String> tempRoles,
+                                        Map<String, Set<CtStatement>> roleStatement,
+                                        Set<CtStatement> st) {
         for (String role : tempRoles) {
             Set<CtStatement> t = roleStatement.get(role);
             if (t == null) {
@@ -235,6 +192,33 @@ public class SecurityElementMatcher {
                 roleStatement.put(role, t);
             }
         }
+    }
+
+    private void checkRoleStatementMapHelper(Map<String, Set<CtStatement>> roleStatement, CtBlock body) {
+        List<CtStatement> statements = body.getStatements();
+        Set<CtStatement> st = new HashSet<>();
+        List<String> tempRoles = new ArrayList<>();
+        for (CtStatement s : statements) {
+            if (s.toString().contains("checkRole")) {
+                String pattern = "\\w+";
+                String regex = s.toString();
+                Matcher m = Pattern.compile(pattern).matcher(regex);
+                boolean methodCalled = false;
+                while (m.find()) {
+                    String temp = m.group();
+                    if (methodCalled) {
+                        tempRoles.add(temp);
+                        methodCalled = false;
+                    }
+                    if (temp.equals("checkRole")) {
+                        methodCalled = true;
+                    }
+                }
+            } else {
+                st.add(s);
+            }
+        }
+        updateRoleStatementMap(tempRoles, roleStatement, st);
     }
 
     public static final String LOGIN = "loginMatcher";
