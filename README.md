@@ -1,6 +1,14 @@
 # Read me
 Work progress and things to do for every week.
 
+## 6th Week
+Done:
+1. Get a test exmaple of checkRole in try-catch structure and verify that the method
+
+TODO:
+1. Export this project in Eclipse
+2. Use Eclipse Modeling Framework to create a data structure instead of a map structure for the store of result
+
 ## 5th Week
 Simple explication of class [SecurityElementMatcher](src/main/java/xisong/SecurityElementMatcher.java):
 1. Key function is `roleStatementMap()` who aims to get a role-statements map.

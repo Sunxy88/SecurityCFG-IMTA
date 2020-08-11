@@ -2,23 +2,13 @@ package xisong;
 
 import fr.inria.SpoonMetaFactory;
 import org.junit.Test;
-import spoon.SpoonAPI;
-import spoon.processing.AbstractProcessor;
-import spoon.processing.ProcessingManager;
-import spoon.processing.Processor;
 import spoon.reflect.code.CtCodeElement;
 import spoon.reflect.code.CtIf;
 import spoon.reflect.code.CtStatement;
 import spoon.reflect.code.CtTry;
 import spoon.reflect.declaration.CtElement;
-import spoon.reflect.declaration.CtMethod;
-import spoon.reflect.factory.Factory;
-import spoon.reflect.visitor.Filter;
-import spoon.support.QueueProcessingManager;
 
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class MatcherTest {
 
@@ -86,12 +76,20 @@ public class MatcherTest {
     @Test
     public void tryStatementTest() throws Exception {
         String matcherFolder = "src/main/java/xisong/SecurityElementMatcher.java";
-        String targetFolder = this.getClass().getResource("/shiro-example/8/").toURI().getPath();
+        String targetFolder = this.getClass().getResource("/shiro-example/12/").toURI().getPath();
         SecurityElementMatcher securityElementMatcher = new SecurityElementMatcher(matcherFolder);
-        List<CtTry> tryList = securityElementMatcher.getTryStatements(targetFolder, SecurityElementMatcher.LOGIN);
-        for (CtTry tr : tryList) {
-            System.out.println(tr);
-        }
+        List<CtTry> list = securityElementMatcher.checkRoleTryStatements(targetFolder);
+        System.out.println(list);
+    }
+
+
+    @Test
+    public void tryStatementMapTest() throws Exception {
+        String matcherFolder = "src/main/java/xisong/SecurityElementMatcher.java";
+        String targetFolder = this.getClass().getResource("/shiro-example/12/").toURI().getPath();
+        SecurityElementMatcher securityElementMatcher = new SecurityElementMatcher(matcherFolder);
+        Map<String, Set<CtStatement>> map = securityElementMatcher.tryStatementMap(targetFolder);
+        System.out.println(map);
     }
 
     @Test
@@ -107,6 +105,15 @@ public class MatcherTest {
     public void roleAndStatementMapTest() throws Exception {
         String matcherFolder = "src/main/java/xisong/SecurityElementMatcher.java";
         String targetFolder = this.getClass().getResource("/shiro-example/11/").toURI().getPath();
+        SecurityElementMatcher securityElementMatcher = new SecurityElementMatcher(matcherFolder);
+        Map<String, Set<CtStatement>> map = securityElementMatcher.roleStatementMap(targetFolder);
+        System.out.println(map);
+    }
+
+    @Test
+    public void roleAndStatementMap2Test() throws Exception {
+        String matcherFolder = "src/main/java/xisong/SecurityElementMatcher.java";
+        String targetFolder = this.getClass().getResource("/shiro-example/12/").toURI().getPath();
         SecurityElementMatcher securityElementMatcher = new SecurityElementMatcher(matcherFolder);
         Map<String, Set<CtStatement>> map = securityElementMatcher.roleStatementMap(targetFolder);
         System.out.println(map);

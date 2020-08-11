@@ -82,7 +82,9 @@ public class SecurityElementMatcher {
         List<CtElement> originalElements = getStatements(target, filter);
         Set<CtTry> tryElements = new HashSet<>();
         for (CtElement element : originalElements) {
-            tryElements.add(element.getParent((CtTry ctTry) -> true));
+            CtTry toAdd = element.getParent((CtTry ctTry) -> true);
+            if (toAdd != null)
+                tryElements.add(toAdd);
         }
         return new ArrayList<>(tryElements);
     }
@@ -121,8 +123,22 @@ public class SecurityElementMatcher {
     public Map<String, Set<CtStatement>> roleStatementMap(String target) {
         Map<String, Set<CtStatement>> map1 = ifRoleStatementMap(target);
         Map<String, Set<CtStatement>> map2 = methodStatementMap(target);
-        map1.putAll(map2);
+        Map<String, Set<CtStatement>> map3 = tryStatementMap(target);
+        mergeTwoMap(map1, map2);
+        mergeTwoMap(map1, map3);
         return map1;
+    }
+
+    private void mergeTwoMap(Map<String, Set<CtStatement>> map1, Map<String, Set<CtStatement>> map2) {
+        for (Map.Entry<String, Set<CtStatement>> entry1 : map2.entrySet()) {
+            if (map1.containsKey(entry1.getKey())) {
+                for (CtStatement obj : entry1.getValue()) {
+                    map1.get(entry1.getKey()).add(obj);
+                }
+            } else {
+                map1.put(entry1.getKey(), entry1.getValue());
+            }
+        }
     }
 
     public Map<String, Set<CtStatement>> ifRoleStatementMap(String target) {
