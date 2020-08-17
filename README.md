@@ -1,13 +1,20 @@
 # Read me
 Work progress and things to do for every week.
 
+## 7th Week
+
+TODO:
+1. Make given data structures available in project
+2. Save result in data structures instead of a map structure
+
 ## 6th Week
 Done:
 1. Get a test exmaple of checkRole in try-catch structure and verify that the method
+2. Export this project in Eclipse
+3. Data structures are ready
 
 TODO:
-1. Export this project in Eclipse
-2. Use Eclipse Modeling Framework to create a data structure instead of a map structure for the store of result
+1. No idea for the import of the dependency used in Eclipse Modeling Framework in a Maven project.
 
 ## 5th Week
 Simple explication of class [SecurityElementMatcher](src/main/java/xisong/SecurityElementMatcher.java):
