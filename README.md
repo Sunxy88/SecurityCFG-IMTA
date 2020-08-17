@@ -2,16 +2,18 @@
 Work progress and things to do for every week.
 
 ## 7th Week
+Done:
+1. Make given data structures available in project
 
 TODO:
-1. Make given data structures available in project
-2. Save result in data structures instead of a map structure
+1. Save result in data structures instead of a map structure
+2. A strange problem occurs everytime when `SpoonAPI.buildModel()` is excuted
 
 ## 6th Week
 Done:
 1. Get a test exmaple of checkRole in try-catch structure and verify that the method
 2. Export this project in Eclipse
-3. Data structures are ready
+3. Data structures have been generated
 
 TODO:
 1. No idea for the import of the dependency used in Eclipse Modeling Framework in a Maven project.
