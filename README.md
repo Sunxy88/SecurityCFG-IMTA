@@ -7,7 +7,17 @@ Done:
 
 TODO:
 1. Save result in data structures instead of a map structure
-2. A strange problem occurs everytime when `SpoonAPI.buildModel()` is excuted
+
+
+Solved Problem:
+1. A strange problem occurs everytime when `SpoonAPI.buildModel()` is excuted. To be specific, spoon throws a runtime 
+exception and says that there is a class that has been already defined, 
+which is pretty much confusing because everything was normal two or three days ago. Without any change in code, 
+this problem occured. -> Solved
+
+    Solution: Update the version of the dependency of spoon core from 8.2.0-beta-14 to 8.2.0. And this problem 
+    disappeared. No clue about it....
+
 
 ## 6th Week
 Done:
@@ -28,9 +38,12 @@ Simple explication of class [SecurityElementMatcher](src/main/java/xisong/Securi
     4. Put statements in a list and then make this list bound with corresponding role in a map
 
 DONE:
-1. `subject.checkRole()` in try-catch structure, implemented [here in method `getTryStatements`](src/main/java/xisong/SecurityElementMatcher.java)
+1. `subject.checkRole()` in try-catch structure, implemented
+ [here in method `getTryStatements`](src/main/java/xisong/SecurityElementMatcher.java)
     * One problem : no example found
-2. `subject.checkRole()` in a function who throws an exception if something goes wrong in the method `methodStatementMap(String target)` in class [`SecurityElementMatcher`](src/main/java/xisong/SecurityElementMatcher.java)
+2. `subject.checkRole()` in a function who throws an exception if something goes wrong 
+in the method `methodStatementMap(String target)` 
+in class [`SecurityElementMatcher`](src/main/java/xisong/SecurityElementMatcher.java)
     * Able to get all methods that contain a `subject.checkRole()`
     * Working on extraction of all statemetns after the call of `subject.checkRole()`
 3. `subject.isPermitted()` in if structure
@@ -52,7 +65,8 @@ For example:![demo1](src/test/resources/shiro-example/3/DemoPicture.png)
 1. Shiro examples from :s
     1. https://github.com/jjoe64/shiroexample
     2. little demo written by myself
-2. [SecurityElementMatcher](src/main/java/xisong/SecurityElementMatcher.java) could find specified security element in given codes.
+2. [SecurityElementMatcher](src/main/java/xisong/SecurityElementMatcher.java) 
+could find specified security element in given codes.
 3. Result CFG could be stored in given directory in [GenerateCfg](src/main/java/xisong/GenerateCfg.java).
 
 ## 1st Week
