@@ -4,6 +4,7 @@ package xisong.model.programmaticAC;
 
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 
@@ -38,7 +39,7 @@ public interface ProgrammaticACPackage extends EPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	String eNS_URI = "ProgrammaticAC";
+	String eNS_URI = "xisong.model.programmaticAC";
 
 	/**
 	 * The package namespace name.
@@ -46,7 +47,7 @@ public interface ProgrammaticACPackage extends EPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	String eNS_PREFIX = "ProgrammaticAC";
+	String eNS_PREFIX = "xisong.model.programmaticAC";
 
 	/**
 	 * The singleton instance of the package.
@@ -57,8 +58,11 @@ public interface ProgrammaticACPackage extends EPackage {
 	ProgrammaticACPackage eINSTANCE = xisong.model.programmaticAC.impl.ProgrammaticACPackageImpl.init();
 
 	/**
+	 * The meta object id for the '{@link xisong.model.programmaticAC.impl.ACPolicyImpl <em>AC Policy</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * @see xisong.model.programmaticAC.impl.ACPolicyImpl
+	 * @see xisong.model.programmaticAC.impl.ProgrammaticACPackageImpl#getACPolicy()
 	 * @generated
 	 */
 	int AC_POLICY = 0;
@@ -109,8 +113,11 @@ public interface ProgrammaticACPackage extends EPackage {
 	int AC_POLICY_OPERATION_COUNT = 0;
 
 	/**
+	 * The meta object id for the '{@link xisong.model.programmaticAC.impl.RoleImpl <em>Role</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * @see xisong.model.programmaticAC.impl.RoleImpl
+	 * @see xisong.model.programmaticAC.impl.ProgrammaticACPackageImpl#getRole()
 	 * @generated
 	 */
 	int ROLE = 1;
@@ -152,8 +159,11 @@ public interface ProgrammaticACPackage extends EPackage {
 	int ROLE_OPERATION_COUNT = 0;
 
 	/**
+	 * The meta object id for the '{@link xisong.model.programmaticAC.impl.ActionImpl <em>Action</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * @see xisong.model.programmaticAC.impl.ActionImpl
+	 * @see xisong.model.programmaticAC.impl.ProgrammaticACPackageImpl#getAction()
 	 * @generated
 	 */
 	int ACTION = 2;
@@ -177,8 +187,11 @@ public interface ProgrammaticACPackage extends EPackage {
 	int ACTION_OPERATION_COUNT = 0;
 
 	/**
+	 * The meta object id for the '{@link xisong.model.programmaticAC.impl.ObjectImpl <em>Object</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * @see xisong.model.programmaticAC.impl.ObjectImpl
+	 * @see xisong.model.programmaticAC.impl.ProgrammaticACPackageImpl#getObject()
 	 * @generated
 	 */
 	int OBJECT = 3;
@@ -202,8 +215,11 @@ public interface ProgrammaticACPackage extends EPackage {
 	int OBJECT_OPERATION_COUNT = 0;
 
 	/**
+	 * The meta object id for the '{@link xisong.model.programmaticAC.impl.PermissionImpl <em>Permission</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * @see xisong.model.programmaticAC.impl.PermissionImpl
+	 * @see xisong.model.programmaticAC.impl.ProgrammaticACPackageImpl#getPermission()
 	 * @generated
 	 */
 	int PERMISSION = 4;
@@ -245,8 +261,11 @@ public interface ProgrammaticACPackage extends EPackage {
 	int PERMISSION_OPERATION_COUNT = 0;
 
 	/**
+	 * The meta object id for the '{@link xisong.model.programmaticAC.impl.StatementImpl <em>Statement</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * @see xisong.model.programmaticAC.impl.StatementImpl
+	 * @see xisong.model.programmaticAC.impl.ProgrammaticACPackageImpl#getStatement()
 	 * @generated
 	 */
 	int STATEMENT = 5;
@@ -270,11 +289,23 @@ public interface ProgrammaticACPackage extends EPackage {
 	int STATEMENT_OPERATION_COUNT = OBJECT_OPERATION_COUNT + 0;
 
 	/**
+	 * The meta object id for the '{@link xisong.model.programmaticAC.impl.ExecuteImpl <em>Execute</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * @see xisong.model.programmaticAC.impl.ExecuteImpl
+	 * @see xisong.model.programmaticAC.impl.ProgrammaticACPackageImpl#getExecute()
 	 * @generated
 	 */
 	int EXECUTE = 6;
+
+	/**
+	 * The feature id for the '<em><b>Executed Statement</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXECUTE__EXECUTED_STATEMENT = ACTION_FEATURE_COUNT + 0;
 
 	/**
 	 * The number of structural features of the '<em>Execute</em>' class.
@@ -283,7 +314,7 @@ public interface ProgrammaticACPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXECUTE_FEATURE_COUNT = ACTION_FEATURE_COUNT + 0;
+	int EXECUTE_FEATURE_COUNT = ACTION_FEATURE_COUNT + 1;
 
 	/**
 	 * The number of operations of the '<em>Execute</em>' class.
@@ -294,125 +325,185 @@ public interface ProgrammaticACPackage extends EPackage {
 	 */
 	int EXECUTE_OPERATION_COUNT = ACTION_OPERATION_COUNT + 0;
 
+	/**
+	 * The meta object id for the '<em>Ct Statement</em>' data type.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see spoon.reflect.code.CtStatement
+	 * @see xisong.model.programmaticAC.impl.ProgrammaticACPackageImpl#getCtStatement()
+	 * @generated
+	 */
+	int CT_STATEMENT = 7;
+
 
 	/**
+	 * Returns the meta object for class '{@link xisong.model.programmaticAC.ACPolicy <em>AC Policy</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for class '<em>AC Policy</em>'.
+	 * @see xisong.model.programmaticAC.ACPolicy
 	 * @generated
 	 */
 	EClass getACPolicy();
 
 	/**
+	 * Returns the meta object for the containment reference list '{@link xisong.model.programmaticAC.ACPolicy#getRoles <em>Roles</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the containment reference list '<em>Roles</em>'.
+	 * @see xisong.model.programmaticAC.ACPolicy#getRoles()
 	 * @see #getACPolicy()
 	 * @generated
 	 */
 	EReference getACPolicy_Roles();
 
 	/**
+	 * Returns the meta object for the containment reference list '{@link xisong.model.programmaticAC.ACPolicy#getActions <em>Actions</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the containment reference list '<em>Actions</em>'.
+	 * @see xisong.model.programmaticAC.ACPolicy#getActions()
 	 * @see #getACPolicy()
 	 * @generated
 	 */
 	EReference getACPolicy_Actions();
 
 	/**
+	 * Returns the meta object for the containment reference list '{@link xisong.model.programmaticAC.ACPolicy#getObjects <em>Objects</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the containment reference list '<em>Objects</em>'.
+	 * @see xisong.model.programmaticAC.ACPolicy#getObjects()
 	 * @see #getACPolicy()
 	 * @generated
 	 */
 	EReference getACPolicy_Objects();
 
 	/**
+	 * Returns the meta object for class '{@link xisong.model.programmaticAC.Role <em>Role</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Role</em>'.
+	 * @see xisong.model.programmaticAC.Role
 	 * @generated
 	 */
 	EClass getRole();
 
 	/**
+	 * Returns the meta object for the containment reference list '{@link xisong.model.programmaticAC.Role#getPermissions <em>Permissions</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the containment reference list '<em>Permissions</em>'.
+	 * @see xisong.model.programmaticAC.Role#getPermissions()
 	 * @see #getRole()
 	 * @generated
 	 */
 	EReference getRole_Permissions();
 
 	/**
+	 * Returns the meta object for the attribute '{@link xisong.model.programmaticAC.Role#getName <em>Name</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Name</em>'.
+	 * @see xisong.model.programmaticAC.Role#getName()
 	 * @see #getRole()
 	 * @generated
 	 */
 	EAttribute getRole_Name();
 
 	/**
+	 * Returns the meta object for class '{@link xisong.model.programmaticAC.Action <em>Action</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Action</em>'.
+	 * @see xisong.model.programmaticAC.Action
 	 * @generated
 	 */
 	EClass getAction();
 
 	/**
+	 * Returns the meta object for class '{@link xisong.model.programmaticAC.Object <em>Object</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Object</em>'.
+	 * @see xisong.model.programmaticAC.Object
 	 * @generated
 	 */
 	EClass getObject();
 
 	/**
+	 * Returns the meta object for class '{@link xisong.model.programmaticAC.Permission <em>Permission</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Permission</em>'.
+	 * @see xisong.model.programmaticAC.Permission
 	 * @generated
 	 */
 	EClass getPermission();
 
 	/**
+	 * Returns the meta object for the reference '{@link xisong.model.programmaticAC.Permission#getAction <em>Action</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the reference '<em>Action</em>'.
+	 * @see xisong.model.programmaticAC.Permission#getAction()
 	 * @see #getPermission()
 	 * @generated
 	 */
 	EReference getPermission_Action();
 
 	/**
+	 * Returns the meta object for the reference '{@link xisong.model.programmaticAC.Permission#getObject <em>Object</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the reference '<em>Object</em>'.
+	 * @see xisong.model.programmaticAC.Permission#getObject()
 	 * @see #getPermission()
 	 * @generated
 	 */
 	EReference getPermission_Object();
 
 	/**
+	 * Returns the meta object for class '{@link xisong.model.programmaticAC.Statement <em>Statement</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Statement</em>'.
+	 * @see xisong.model.programmaticAC.Statement
 	 * @generated
 	 */
 	EClass getStatement();
 
 	/**
+	 * Returns the meta object for class '{@link xisong.model.programmaticAC.Execute <em>Execute</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Execute</em>'.
+	 * @see xisong.model.programmaticAC.Execute
 	 * @generated
 	 */
 	EClass getExecute();
+
+	/**
+	 * Returns the meta object for the attribute '{@link xisong.model.programmaticAC.Execute#getExecutedStatement <em>Executed Statement</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Executed Statement</em>'.
+	 * @see xisong.model.programmaticAC.Execute#getExecutedStatement()
+	 * @see #getExecute()
+	 * @generated
+	 */
+	EAttribute getExecute_ExecutedStatement();
+
+	/**
+	 * Returns the meta object for data type '{@link spoon.reflect.code.CtStatement <em>Ct Statement</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for data type '<em>Ct Statement</em>'.
+	 * @see spoon.reflect.code.CtStatement
+	 * @model instanceClass="spoon.reflect.code.CtStatement"
+	 * @generated
+	 */
+	EDataType getCtStatement();
 
 	/**
 	 * Returns the factory that creates the instances of the model.
@@ -438,8 +529,11 @@ public interface ProgrammaticACPackage extends EPackage {
 	 */
 	interface Literals {
 		/**
+		 * The meta object literal for the '{@link xisong.model.programmaticAC.impl.ACPolicyImpl <em>AC Policy</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
+		 * @see xisong.model.programmaticAC.impl.ACPolicyImpl
+		 * @see xisong.model.programmaticAC.impl.ProgrammaticACPackageImpl#getACPolicy()
 		 * @generated
 		 */
 		EClass AC_POLICY = eINSTANCE.getACPolicy();
@@ -469,8 +563,11 @@ public interface ProgrammaticACPackage extends EPackage {
 		EReference AC_POLICY__OBJECTS = eINSTANCE.getACPolicy_Objects();
 
 		/**
+		 * The meta object literal for the '{@link xisong.model.programmaticAC.impl.RoleImpl <em>Role</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
+		 * @see xisong.model.programmaticAC.impl.RoleImpl
+		 * @see xisong.model.programmaticAC.impl.ProgrammaticACPackageImpl#getRole()
 		 * @generated
 		 */
 		EClass ROLE = eINSTANCE.getRole();
@@ -492,22 +589,31 @@ public interface ProgrammaticACPackage extends EPackage {
 		EAttribute ROLE__NAME = eINSTANCE.getRole_Name();
 
 		/**
+		 * The meta object literal for the '{@link xisong.model.programmaticAC.impl.ActionImpl <em>Action</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
+		 * @see xisong.model.programmaticAC.impl.ActionImpl
+		 * @see xisong.model.programmaticAC.impl.ProgrammaticACPackageImpl#getAction()
 		 * @generated
 		 */
 		EClass ACTION = eINSTANCE.getAction();
 
 		/**
+		 * The meta object literal for the '{@link xisong.model.programmaticAC.impl.ObjectImpl <em>Object</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
+		 * @see xisong.model.programmaticAC.impl.ObjectImpl
+		 * @see xisong.model.programmaticAC.impl.ProgrammaticACPackageImpl#getObject()
 		 * @generated
 		 */
 		EClass OBJECT = eINSTANCE.getObject();
 
 		/**
+		 * The meta object literal for the '{@link xisong.model.programmaticAC.impl.PermissionImpl <em>Permission</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
+		 * @see xisong.model.programmaticAC.impl.PermissionImpl
+		 * @see xisong.model.programmaticAC.impl.ProgrammaticACPackageImpl#getPermission()
 		 * @generated
 		 */
 		EClass PERMISSION = eINSTANCE.getPermission();
@@ -529,18 +635,42 @@ public interface ProgrammaticACPackage extends EPackage {
 		EReference PERMISSION__OBJECT = eINSTANCE.getPermission_Object();
 
 		/**
+		 * The meta object literal for the '{@link xisong.model.programmaticAC.impl.StatementImpl <em>Statement</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
+		 * @see xisong.model.programmaticAC.impl.StatementImpl
+		 * @see xisong.model.programmaticAC.impl.ProgrammaticACPackageImpl#getStatement()
 		 * @generated
 		 */
 		EClass STATEMENT = eINSTANCE.getStatement();
 
 		/**
+		 * The meta object literal for the '{@link xisong.model.programmaticAC.impl.ExecuteImpl <em>Execute</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see xisong.model.programmaticAC.impl.ExecuteImpl
+		 * @see xisong.model.programmaticAC.impl.ProgrammaticACPackageImpl#getExecute()
+		 * @generated
+		 */
+		EClass EXECUTE = eINSTANCE.getExecute();
+
+		/**
+		 * The meta object literal for the '<em><b>Executed Statement</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EClass EXECUTE = eINSTANCE.getExecute();
+		EAttribute EXECUTE__EXECUTED_STATEMENT = eINSTANCE.getExecute_ExecutedStatement();
+
+		/**
+		 * The meta object literal for the '<em>Ct Statement</em>' data type.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see spoon.reflect.code.CtStatement
+		 * @see xisong.model.programmaticAC.impl.ProgrammaticACPackageImpl#getCtStatement()
+		 * @generated
+		 */
+		EDataType CT_STATEMENT = eINSTANCE.getCtStatement();
 
 	}
 

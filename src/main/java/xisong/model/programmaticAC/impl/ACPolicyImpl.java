@@ -29,6 +29,9 @@ import xisong.model.programmaticAC.Role;
  * The following features are implemented:
  * </p>
  * <ul>
+ *   <li>{@link xisong.model.programmaticAC.impl.ACPolicyImpl#getRoles <em>Roles</em>}</li>
+ *   <li>{@link xisong.model.programmaticAC.impl.ACPolicyImpl#getActions <em>Actions</em>}</li>
+ *   <li>{@link xisong.model.programmaticAC.impl.ACPolicyImpl#getObjects <em>Objects</em>}</li>
  * </ul>
  *
  * @generated

@@ -4,10 +4,13 @@ package xisong.model.programmaticAC.impl;
 
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 
 import org.eclipse.emf.ecore.impl.EPackageImpl;
+
+import spoon.reflect.code.CtStatement;
 
 import xisong.model.programmaticAC.ACPolicy;
 import xisong.model.programmaticAC.Action;
@@ -75,6 +78,13 @@ public class ProgrammaticACPackageImpl extends EPackageImpl implements Programma
 	private EClass executeEClass = null;
 
 	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EDataType ctStatementEDataType = null;
+
+	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
 	 * {@link org.eclipse.emf.ecore.EPackage.Registry EPackage.Registry} by the package
 	 * package URI value.
@@ -85,6 +95,7 @@ public class ProgrammaticACPackageImpl extends EPackageImpl implements Programma
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see org.eclipse.emf.ecore.EPackage.Registry
+	 * @see xisong.model.programmaticAC.ProgrammaticACPackage#eNS_URI
 	 * @see #init()
 	 * @generated
 	 */
@@ -280,6 +291,26 @@ public class ProgrammaticACPackageImpl extends EPackageImpl implements Programma
 	 * @generated
 	 */
 	@Override
+	public EAttribute getExecute_ExecutedStatement() {
+		return (EAttribute)executeEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EDataType getCtStatement() {
+		return ctStatementEDataType;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public ProgrammaticACFactory getProgrammaticACFactory() {
 		return (ProgrammaticACFactory)getEFactoryInstance();
 	}
@@ -323,6 +354,10 @@ public class ProgrammaticACPackageImpl extends EPackageImpl implements Programma
 		statementEClass = createEClass(STATEMENT);
 
 		executeEClass = createEClass(EXECUTE);
+		createEAttribute(executeEClass, EXECUTE__EXECUTED_STATEMENT);
+
+		// Create data types
+		ctStatementEDataType = createEDataType(CT_STATEMENT);
 	}
 
 	/**
@@ -377,6 +412,10 @@ public class ProgrammaticACPackageImpl extends EPackageImpl implements Programma
 		initEClass(statementEClass, Statement.class, "Statement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEClass(executeEClass, Execute.class, "Execute", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getExecute_ExecutedStatement(), this.getCtStatement(), "executedStatement", null, 0, 1, Execute.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		// Initialize data types
+		initEDataType(ctStatementEDataType, CtStatement.class, "CtStatement", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 
 		// Create resource
 		createResource(eNS_URI);

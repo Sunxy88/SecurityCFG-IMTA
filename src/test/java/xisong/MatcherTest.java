@@ -7,6 +7,8 @@ import spoon.reflect.code.CtIf;
 import spoon.reflect.code.CtStatement;
 import spoon.reflect.code.CtTry;
 import spoon.reflect.declaration.CtElement;
+import xisong.model.programmaticAC.Permission;
+import xisong.model.programmaticAC.Role;
 
 import java.util.*;
 
@@ -117,5 +119,20 @@ public class MatcherTest {
         SecurityElementMatcher securityElementMatcher = new SecurityElementMatcher(matcherFolder);
         Map<String, Set<CtStatement>> map = securityElementMatcher.roleStatementMap(targetFolder);
         System.out.println(map);
+    }
+
+    @Test
+    public void getRolesTest() throws Exception {
+        String matcherFolder = "src/main/java/xisong/SecurityElementMatcher.java";
+        String targetFolder = this.getClass().getResource("/shiro-example/12/").toURI().getPath();
+        SecurityElementMatcher securityElementMatcher = new SecurityElementMatcher(matcherFolder);
+        List<Role> roles = securityElementMatcher.getRoles(targetFolder);
+        for (Role role : roles) {
+            System.out.println(role);
+            for (Permission permission : role.getPermissions()) {
+                System.out.println(permission);
+                System.out.println(permission.getAction());
+            }
+        }
     }
 }

@@ -42,12 +42,14 @@ public interface Role extends EObject {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Name</em>' attribute.
 	 * @see #setName(String)
+	 * @see xisong.model.programmaticAC.ProgrammaticACPackage#getRole_Name()
 	 * @model
 	 * @generated
 	 */
 	String getName();
 
 	/**
+	 * Sets the value of the '{@link xisong.model.programmaticAC.Role#getName <em>Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Name</em>' attribute.

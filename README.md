@@ -4,9 +4,12 @@ Work progress and things to do for every week.
 ## 7th Week
 Done:
 1. Make given data structures available in project
-
-TODO:
-1. Save result in data structures instead of a map structure
+2. Save result in data structures instead of a map structure
+    1. Role name (a string) is in `Role`
+    2. The executed statements after a security check are stored
+     in [`xisong.model.programmaticAC.Execute`](src/main/java/xisong/model/programmaticAC/Execute.java)
+    3. `Permission` maintains a list of `Execute`
+    4. `Role` has a list of `Permission`
 
 
 Solved Problem:
@@ -62,7 +65,7 @@ TODO:
 For example:![demo1](src/test/resources/shiro-example/3/DemoPicture.png)
 
 ## 2nd Week
-1. Shiro examples from :s
+1. Shiro examples from :
     1. https://github.com/jjoe64/shiroexample
     2. little demo written by myself
 2. [SecurityElementMatcher](src/main/java/xisong/SecurityElementMatcher.java) 

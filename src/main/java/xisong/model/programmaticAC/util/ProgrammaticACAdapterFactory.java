@@ -22,6 +22,7 @@ import xisong.model.programmaticAC.Statement;
  * The <b>Adapter Factory</b> for the model.
  * It provides an adapter <code>createXXX</code> method for each class of the model.
  * <!-- end-user-doc -->
+ * @see xisong.model.programmaticAC.ProgrammaticACPackage
  * @generated
  */
 public class ProgrammaticACAdapterFactory extends AdapterFactoryImpl {
@@ -149,11 +150,13 @@ public class ProgrammaticACAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
+	 * Creates a new adapter for an object of class '{@link xisong.model.programmaticAC.Action <em>Action</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
+	 * @see xisong.model.programmaticAC.Action
 	 * @generated
 	 */
 	public Adapter createActionAdapter() {
@@ -161,11 +164,13 @@ public class ProgrammaticACAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
+	 * Creates a new adapter for an object of class '{@link xisong.model.programmaticAC.Object <em>Object</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
+	 * @see xisong.model.programmaticAC.Object
 	 * @generated
 	 */
 	public Adapter createObjectAdapter() {
@@ -173,11 +178,13 @@ public class ProgrammaticACAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
+	 * Creates a new adapter for an object of class '{@link xisong.model.programmaticAC.Permission <em>Permission</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
+	 * @see xisong.model.programmaticAC.Permission
 	 * @generated
 	 */
 	public Adapter createPermissionAdapter() {
@@ -185,11 +192,13 @@ public class ProgrammaticACAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
+	 * Creates a new adapter for an object of class '{@link xisong.model.programmaticAC.Statement <em>Statement</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
+	 * @see xisong.model.programmaticAC.Statement
 	 * @generated
 	 */
 	public Adapter createStatementAdapter() {
@@ -197,11 +206,13 @@ public class ProgrammaticACAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
+	 * Creates a new adapter for an object of class '{@link xisong.model.programmaticAC.Execute <em>Execute</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
+	 * @see xisong.model.programmaticAC.Execute
 	 * @generated
 	 */
 	public Adapter createExecuteAdapter() {

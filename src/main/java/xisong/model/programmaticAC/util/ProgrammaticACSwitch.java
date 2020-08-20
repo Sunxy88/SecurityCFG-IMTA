@@ -25,6 +25,7 @@ import xisong.model.programmaticAC.Statement;
  * until a non-null result is returned,
  * which is the result of the switch.
  * <!-- end-user-doc -->
+ * @see xisong.model.programmaticAC.ProgrammaticACPackage
  * @generated
  */
 public class ProgrammaticACSwitch<T> extends Switch<T> {

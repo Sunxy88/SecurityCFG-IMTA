@@ -3,12 +3,15 @@
 package xisong.model.programmaticAC.impl;
 
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
 
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
+
+import spoon.reflect.code.CtStatement;
 
 import xisong.model.programmaticAC.ACPolicy;
 import xisong.model.programmaticAC.Action;
@@ -72,6 +75,36 @@ public class ProgrammaticACFactoryImpl extends EFactoryImpl implements Programma
 			case ProgrammaticACPackage.EXECUTE: return createExecute();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
+		}
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Object createFromString(EDataType eDataType, String initialValue) {
+		switch (eDataType.getClassifierID()) {
+			case ProgrammaticACPackage.CT_STATEMENT:
+				return createCtStatementFromString(eDataType, initialValue);
+			default:
+				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
+		}
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String convertToString(EDataType eDataType, Object instanceValue) {
+		switch (eDataType.getClassifierID()) {
+			case ProgrammaticACPackage.CT_STATEMENT:
+				return convertCtStatementToString(eDataType, instanceValue);
+			default:
+				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
 	}
 
@@ -150,6 +183,24 @@ public class ProgrammaticACFactoryImpl extends EFactoryImpl implements Programma
 	public Execute createExecute() {
 		ExecuteImpl execute = new ExecuteImpl();
 		return execute;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public CtStatement createCtStatementFromString(EDataType eDataType, String initialValue) {
+		return (CtStatement)super.createFromString(eDataType, initialValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertCtStatementToString(EDataType eDataType, Object instanceValue) {
+		return super.convertToString(eDataType, instanceValue);
 	}
 
 	/**

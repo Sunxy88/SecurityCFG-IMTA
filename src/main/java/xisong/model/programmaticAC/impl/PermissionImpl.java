@@ -22,6 +22,8 @@ import xisong.model.programmaticAC.ProgrammaticACPackage;
  * The following features are implemented:
  * </p>
  * <ul>
+ *   <li>{@link xisong.model.programmaticAC.impl.PermissionImpl#getAction <em>Action</em>}</li>
+ *   <li>{@link xisong.model.programmaticAC.impl.PermissionImpl#getObject <em>Object</em>}</li>
  * </ul>
  *
  * @generated

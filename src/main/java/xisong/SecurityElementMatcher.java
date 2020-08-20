@@ -15,6 +15,9 @@ import spoon.reflect.declaration.CtElement;
 import spoon.reflect.declaration.CtMethod;
 import spoon.template.TemplateMatcher;
 import spoon.template.TemplateParameter;
+import xisong.model.programmaticAC.Execute;
+import xisong.model.programmaticAC.ProgrammaticACFactory;
+import xisong.model.programmaticAC.Role;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -115,6 +118,28 @@ public class SecurityElementMatcher {
 
     public List<CtIf> ifIsAuthenticatedStatements(String target) {
         return getIfStatements(target, AUTHENTICATED);
+    }
+
+
+    /*
+    * Process target project and store all results in correponding class.
+    * */
+    public List<Role> getRoles(String target) {
+        Map<String, Set<CtStatement>> map = roleStatementMap(target);
+        List<Role> roles = new ArrayList<>();
+        for (Map.Entry<String, Set<CtStatement>> entry : map.entrySet()) {
+            Role role = ProgrammaticACFactory.eINSTANCE.createRole();
+            role.setName(entry.getKey());
+            for (CtStatement statement : entry.getValue()) {
+                Execute execute = ProgrammaticACFactory.eINSTANCE.createExecute();
+                execute.setExecutedStatement(statement);
+                xisong.model.programmaticAC.Permission permission = ProgrammaticACFactory.eINSTANCE.createPermission();
+                permission.setAction(execute);
+                role.getPermissions().add(permission);
+            }
+            roles.add(role);
+        }
+        return roles;
     }
 
     /*
