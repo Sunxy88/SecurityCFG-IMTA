@@ -2,8 +2,11 @@
 Work progress and things to do for every week.
 
 ## 8th Week
-TODO : 
+Done: 
 1. Store EMF model in disk in XML form
+
+TODO:
+1. Load RBACModel.xml in Eclipse
 
 ## 7th Week
 Done:
