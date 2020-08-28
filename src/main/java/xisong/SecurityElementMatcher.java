@@ -3,6 +3,11 @@ package xisong;
 import org.apache.shiro.authz.Permission;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.authc.UsernamePasswordToken;
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 import spoon.Launcher;
 import spoon.SpoonAPI;
 import spoon.legacy.NameFilter;
@@ -15,6 +20,7 @@ import spoon.reflect.declaration.CtElement;
 import spoon.reflect.declaration.CtMethod;
 import spoon.template.TemplateMatcher;
 import spoon.template.TemplateParameter;
+import xisong.model.programmaticAC.ACPolicy;
 import xisong.model.programmaticAC.Execute;
 import xisong.model.programmaticAC.ProgrammaticACFactory;
 import xisong.model.programmaticAC.Role;
@@ -122,7 +128,7 @@ public class SecurityElementMatcher {
 
 
     /*
-    * Process target project and store all results in correponding class.
+    * Process target project and store all results in corresponding class.
     * */
     public List<Role> getRoles(String target) {
         Map<String, Set<CtStatement>> map = roleStatementMap(target);
@@ -140,6 +146,45 @@ public class SecurityElementMatcher {
             roles.add(role);
         }
         return roles;
+    }
+
+    /**
+     * Analyse code and save information in root element ACPolicy
+     * @param target
+     * @return
+     */
+    public ACPolicy getPolicy(String target) {
+        Map<String, Set<CtStatement>> map = roleStatementMap(target);
+        ACPolicy policy = ProgrammaticACFactory.eINSTANCE.createACPolicy();
+
+        for (Map.Entry<String, Set<CtStatement>> entry : map.entrySet()) {
+            Role role = ProgrammaticACFactory.eINSTANCE.createRole();
+            role.setName(entry.getKey());
+            policy.getRoles().add(role);
+            for (CtStatement statement : entry.getValue()) {
+                Execute execute = ProgrammaticACFactory.eINSTANCE.createExecute();
+                execute.setExecutedStatement(statement);
+                policy.getActions().add(execute);
+            }
+        }
+
+        return policy;
+    }
+
+    /**
+     * Save root element in given path (.xml)
+     * @param target
+     * @param path
+     */
+    public void saveACPolicy(String target, String path) throws Exception {
+        ACPolicy policy = getPolicy(target);
+        Resource.Factory.Registry reg = Resource.Factory.Registry.INSTANCE;
+        Map<String, Object> m = reg.getExtensionToFactoryMap();
+        m.put("xml",  new XMIResourceFactoryImpl());
+        ResourceSet resSet = new ResourceSetImpl();
+        Resource resource = resSet.createResource(URI.createFileURI(path));
+        resource.getContents().add(policy);
+        resource.save(Collections.EMPTY_MAP);
     }
 
     /*

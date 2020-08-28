@@ -1,6 +1,10 @@
 # Read me
 Work progress and things to do for every week.
 
+## 8th Week
+TODO : 
+1. Store EMF model in disk in XML form
+
 ## 7th Week
 Done:
 1. Make given data structures available in project

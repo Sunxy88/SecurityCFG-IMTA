@@ -7,6 +7,8 @@ import spoon.reflect.code.CtIf;
 import spoon.reflect.code.CtStatement;
 import spoon.reflect.code.CtTry;
 import spoon.reflect.declaration.CtElement;
+import xisong.model.programmaticAC.ACPolicy;
+import xisong.model.programmaticAC.Action;
 import xisong.model.programmaticAC.Permission;
 import xisong.model.programmaticAC.Role;
 
@@ -133,6 +135,30 @@ public class MatcherTest {
                 System.out.println(permission);
                 System.out.println(permission.getAction());
             }
+            System.out.println("-----------------------------------------------------------------------------------------------");
         }
     }
+
+    @Test
+    public void getPolicyTest() throws Exception {
+        String matcherFolder = "src/main/java/xisong/SecurityElementMatcher.java";
+        String targetFolder = this.getClass().getResource("/shiro-example/12/").toURI().getPath();
+        SecurityElementMatcher securityElementMatcher = new SecurityElementMatcher(matcherFolder);
+        ACPolicy policy = securityElementMatcher.getPolicy(targetFolder);
+
+        System.out.println(policy);
+        List<Role> roles = policy.getRoles();
+        List<Action> actions = policy.getActions();
+
+        for (Role role : roles)
+            System.out.println(role);
+
+        System.out.println("----------------------------------------------------------------------------");
+
+        for (Action action : actions) {
+            System.out.println(action);
+        }
+    }
+
+
 }
